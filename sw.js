@@ -1,9 +1,12 @@
-const CACHE_NAME = 'alcantara-games-v1';
+const CACHE_NAME = 'alcantara-games-v2';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.json',
-  './sw.js'
+  './sw.js',
+  './logo.png',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 self.addEventListener('install', event => {
