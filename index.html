@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catálogo Retrô Games</title>
+  <meta name="theme-color" content="#0b0b0b" />
+  <meta name="description" content="PWA para catalogar jogos de Xbox 360 e PS2 com busca automática de capa e sinopse." />
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root{
+      --bg:#050505; --panel:#101010; --panel2:#171717; --line:#262626;
+      --gold:#d4af37; --text:#f4f4f4; --muted:#b6b6b6; --danger:#d9534f; --ok:#4caf50;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:Arial, Helvetica, sans-serif; background:linear-gradient(180deg,#050505,#0b0b0b 35%,#090909);
+      color:var(--text);
+    }
+    .wrap{max-width:1200px; margin:0 auto; padding:16px}
+    .hero{
+      background:linear-gradient(180deg,rgba(212,175,55,.18),rgba(212,175,55,.04));
+      border:1px solid rgba(212,175,55,.18); border-radius:22px; padding:20px; margin-bottom:16px;
+      box-shadow:0 8px 24px rgba(0,0,0,.35);
+    }
+    .brand{display:flex; align-items:center; gap:14px}
+    .brand .logo{
+      width:60px; height:60px; border-radius:18px; border:1px solid rgba(212,175,55,.35);
+      display:grid; place-items:center; color:var(--gold); font-size:28px; background:#0f0f0f;
+    }
+    h1{margin:0 0 4px; font-size:26px}
+    .sub{color:var(--muted); margin:0}
+    .tabs{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap}
+    .tab{
+      border:1px solid var(--line); background:var(--panel); color:var(--text); padding:12px 16px; border-radius:14px;
+      cursor:pointer; font-weight:700;
+    }
+    .tab.active{border-color:rgba(212,175,55,.45); color:var(--gold); box-shadow:inset 0 0 0 1px rgba(212,175,55,.18)}
+    .grid{display:grid; grid-template-columns:360px 1fr; gap:16px}
+    .panel{
+      background:var(--panel); border:1px solid var(--line); border-radius:22px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,.25);
+    }
+    .panel h2{margin:0 0 14px; font-size:18px; color:var(--gold)}
+    label{display:block; font-size:13px; color:#ddd; margin:10px 0 6px}
+    input, select, textarea{
+      width:100%; background:var(--panel2); color:var(--text); border:1px solid #303030; border-radius:14px; padding:12px 14px; outline:none;
+    }
+    textarea{min-height:110px; resize:vertical}
+    .row{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+    .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+    button{
+      border:none; border-radius:14px; padding:12px 16px; font-weight:700; cursor:pointer;
+      background:linear-gradient(180deg,#d4af37,#b48b17); color:#111;
+    }
+    button.secondary{background:#1c1c1c; color:#fff; border:1px solid #333}
+    button.danger{background:linear-gradient(180deg,#ee6661,#bd403a); color:#fff}
+    .helper{font-size:12px; color:var(--muted); margin-top:8px}
+    .toolbar{display:grid; grid-template-columns:1.2fr .8fr .8fr auto auto; gap:10px; margin-bottom:14px}
+    .cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px}
+    .card{
+      background:linear-gradient(180deg,#111,#0c0c0c); border:1px solid #252525; border-radius:18px; overflow:hidden;
+      display:flex; flex-direction:column; min-height:100%;
+    }
+    .cover{
+      width:100%; aspect-ratio: 3 / 4; background:#171717; display:flex; align-items:center; justify-content:center; color:#777; font-size:13px;
+    }
+    .cover img{width:100%; height:100%; object-fit:cover}
+    .card-body{padding:12px}
+    .title{font-size:16px; font-weight:800; line-height:1.25; margin-bottom:6px}
+    .meta{font-size:12px; color:var(--gold); margin-bottom:8px}
+    .desc{font-size:13px; color:#d7d7d7; line-height:1.4; min-height:74px}
+    .badges{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0}
+    .badge{
+      font-size:11px; background:#1a1a1a; border:1px solid #2d2d2d; color:#ddd; padding:6px 8px; border-radius:999px;
+    }
+    .card-actions{display:flex; gap:8px; margin-top:auto}
+    .card-actions button{flex:1; padding:10px 12px}
+    .empty{padding:22px; text-align:center; color:var(--muted); border:1px dashed #333; border-radius:18px}
+    .settings{
+      margin-top:16px; padding-top:16px; border-top:1px solid #232323;
+    }
+    .status{
+      margin-top:10px; font-size:13px; color:var(--muted);
+    }
+    .topline{display:flex; justify-content:space-between; gap:8px; align-items:center; margin-bottom:12px; flex-wrap:wrap}
+    .counter{color:var(--muted); font-size:13px}
+    @media (max-width: 920px){
+      .grid{grid-template-columns:1fr}
+      .toolbar{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width: 620px){
+      .row,.toolbar{grid-template-columns:1fr}
+      .brand .logo{width:54px;height:54px}
+      h1{font-size:22px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="brand">
+        <div class="logo">🎮</div>
+        <div>
+          <h1>Catálogo Retrô Games</h1>
+          <p class="sub">PWA para organizar sua coleção de Xbox 360 e PS2 com capa e sinopse automáticas.</p>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-platform="Xbox 360">Xbox 360</button>
+        <button class="tab" data-platform="PS2">PS2</button>
+      </div>
+    </section>
+
+    <div class="grid">
+      <aside class="panel">
+        <h2>Cadastrar / editar jogo</h2>
+
+        <label for="title">Título do jogo</label>
+        <input id="title" type="text" placeholder="Ex.: Need for Speed Most Wanted" />
+
+        <div class="row">
+          <div>
+            <label for="platform">Plataforma</label>
+            <select id="platform">
+              <option>Xbox 360</option>
+              <option>PS2</option>
+            </select>
+          </div>
+          <div>
+            <label for="category">Categoria</label>
+            <select id="category">
+              <option>Ação</option>
+              <option>Aventura</option>
+              <option>Corrida</option>
+              <option>Esporte</option>
+              <option>FPS</option>
+              <option>Luta</option>
+              <option>RPG</option>
+              <option>Simulação</option>
+              <option>Terror</option>
+              <option>Estratégia</option>
+              <option>Infantil</option>
+              <option>Outros</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="year">Ano</label>
+            <input id="year" type="text" placeholder="Automático ou manual" />
+          </div>
+          <div>
+            <label for="genre">Gênero</label>
+            <input id="genre" type="text" placeholder="Automático ou manual" />
+          </div>
+        </div>
+
+        <label for="cover">URL da capinha</label>
+        <input id="cover" type="url" placeholder="Preenchido pela API ou manualmente" />
+
+        <label for="synopsis">Sinopse</label>
+        <textarea id="synopsis" placeholder="Preenchida pela API ou manualmente"></textarea>
+
+        <div class="btns">
+          <button id="fetchBtn" type="button">Buscar capa e sinopse</button>
+          <button id="saveBtn" type="button">Salvar jogo</button>
+          <button id="clearBtn" class="secondary" type="button">Limpar</button>
+        </div>
+
+        <div class="helper">
+          Digite o título e toque em <strong>Buscar capa e sinopse</strong>. O app usa uma integração opcional com a RAWG API.
+        </div>
+
+        <div class="settings">
+          <h2>Configuração da API</h2>
+          <label for="apiKey">RAWG API Key</label>
+          <input id="apiKey" type="text" placeholder="Cole sua chave aqui" />
+          <div class="btns">
+            <button id="saveApiBtn" type="button">Salvar chave</button>
+            <button id="removeApiBtn" class="secondary" type="button">Remover chave</button>
+          </div>
+          <div class="helper">
+            Sem chave, o app continua funcionando como catálogo manual. Com chave, ele tenta preencher dados automaticamente.
+          </div>
+          <div id="status" class="status"></div>
+        </div>
+      </aside>
+
+      <main class="panel">
+        <div class="topline">
+          <h2 id="listTitle">Coleção Xbox 360</h2>
+          <div id="counter" class="counter">0 jogo(s)</div>
+        </div>
+
+        <div class="toolbar">
+          <input id="searchInput" type="text" placeholder="Buscar no catálogo..." />
+          <select id="filterCategory">
+            <option value="">Todas as categorias</option>
+            <option>Ação</option>
+            <option>Aventura</option>
+            <option>Corrida</option>
+            <option>Esporte</option>
+            <option>FPS</option>
+            <option>Luta</option>
+            <option>RPG</option>
+            <option>Simulação</option>
+            <option>Terror</option>
+            <option>Estratégia</option>
+            <option>Infantil</option>
+            <option>Outros</option>
+          </select>
+          <select id="sortSelect">
+            <option value="title">Ordenar: título</option>
+            <option value="year">Ordenar: ano</option>
+            <option value="category">Ordenar: categoria</option>
+          </select>
+          <button id="exportBtn" class="secondary" type="button">Backup JSON</button>
+          <label class="secondary" style="display:flex;align-items:center;justify-content:center;border-radius:14px;padding:12px 16px;cursor:pointer;border:1px solid #333;background:#1c1c1c;">
+            Restaurar
+            <input id="importInput" type="file" accept=".json" style="display:none" />
+          </label>
+        </div>
+
+        <div id="cards" class="cards"></div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'retro-games-catalog-v1';
+    const API_KEY_STORAGE = 'retro-games-rawg-key';
+    let editingId = null;
+    let currentPlatform = 'Xbox 360';
+
+    const el = {
+      tabs: [...document.querySelectorAll('.tab')],
+      title: document.getElementById('title'),
+      platform: document.getElementById('platform'),
+      category: document.getElementById('category'),
+      year: document.getElementById('year'),
+      genre: document.getElementById('genre'),
+      cover: document.getElementById('cover'),
+      synopsis: document.getElementById('synopsis'),
+      fetchBtn: document.getElementById('fetchBtn'),
+      saveBtn: document.getElementById('saveBtn'),
+      clearBtn: document.getElementById('clearBtn'),
+      cards: document.getElementById('cards'),
+      searchInput: document.getElementById('searchInput'),
+      filterCategory: document.getElementById('filterCategory'),
+      sortSelect: document.getElementById('sortSelect'),
+      listTitle: document.getElementById('listTitle'),
+      counter: document.getElementById('counter'),
+      exportBtn: document.getElementById('exportBtn'),
+      importInput: document.getElementById('importInput'),
+      apiKey: document.getElementById('apiKey'),
+      saveApiBtn: document.getElementById('saveApiBtn'),
+      removeApiBtn: document.getElementById('removeApiBtn'),
+      status: document.getElementById('status'),
+    };
+
+    function loadGames() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+      catch { return []; }
+    }
+
+    function saveGames(games) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(games));
+    }
+
+    function getApiKey() {
+      return localStorage.getItem(API_KEY_STORAGE) || '';
+    }
+
+    function setStatus(msg, isError = false) {
+      el.status.textContent = msg;
+      el.status.style.color = isError ? '#ff8f8f' : '#b6b6b6';
+    }
+
+    function escapeHtml(text = '') {
+      return text
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function resetForm(keepPlatform = true) {
+      editingId = null;
+      const savedPlatform = el.platform.value;
+      el.title.value = '';
+      el.category.value = 'Ação';
+      el.year.value = '';
+      el.genre.value = '';
+      el.cover.value = '';
+      el.synopsis.value = '';
+      el.platform.value = keepPlatform ? savedPlatform : 'Xbox 360';
+      el.saveBtn.textContent = 'Salvar jogo';
+    }
+
+    function upsertGame(game) {
+      const games = loadGames();
+      const idx = games.findIndex(g => g.id === game.id);
+      if (idx >= 0) games[idx] = game;
+      else games.push(game);
+      saveGames(games);
+      render();
+    }
+
+    function removeGame(id) {
+      const games = loadGames().filter(g => g.id !== id);
+      saveGames(games);
+      render();
+    }
+
+    function editGame(id) {
+      const games = loadGames();
+      const game = games.find(g => g.id === id);
+      if (!game) return;
+      editingId = id;
+      el.title.value = game.title || '';
+      el.platform.value = game.platform || 'Xbox 360';
+      el.category.value = game.category || 'Outros';
+      el.year.value = game.year || '';
+      el.genre.value = game.genre || '';
+      el.cover.value = game.cover || '';
+      el.synopsis.value = game.synopsis || '';
+      el.saveBtn.textContent = 'Atualizar jogo';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function render() {
+      const games = loadGames();
+      const term = el.searchInput.value.trim().toLowerCase();
+      const category = el.filterCategory.value;
+      const sortBy = el.sortSelect.value;
+
+      let filtered = games.filter(g => g.platform === currentPlatform);
+
+      if (term) {
+        filtered = filtered.filter(g =>
+          [g.title, g.synopsis, g.genre, g.category].join(' ').toLowerCase().includes(term)
+        );
+      }
+      if (category) {
+        filtered = filtered.filter(g => g.category === category);
+      }
+
+      filtered.sort((a, b) => {
+        if (sortBy === 'year') return String(a.year || '').localeCompare(String(b.year || ''));
+        if (sortBy === 'category') return String(a.category || '').localeCompare(String(b.category || ''));
+        return String(a.title || '').localeCompare(String(b.title || ''));
+      });
+
+      el.listTitle.textContent = `Coleção ${currentPlatform}`;
+      el.counter.textContent = `${filtered.length} jogo(s)`;
+
+      if (!filtered.length) {
+        el.cards.innerHTML = `<div class="empty">Nenhum jogo encontrado nessa plataforma com os filtros atuais.</div>`;
+        return;
+      }
+
+      el.cards.innerHTML = filtered.map(game => `
+        <article class="card">
+          <div class="cover">
+            ${game.cover ? `<img src="${escapeHtml(game.cover)}" alt="Capa de ${escapeHtml(game.title)}" loading="lazy" onerror="this.parentNode.innerHTML='Capa indisponível';" />` : 'Sem capa'}
+          </div>
+          <div class="card-body">
+            <div class="title">${escapeHtml(game.title)}</div>
+            <div class="meta">${escapeHtml(game.platform)} • ${escapeHtml(game.year || 'Ano n/d')}</div>
+            <div class="badges">
+              <span class="badge">${escapeHtml(game.category || 'Outros')}</span>
+              <span class="badge">${escapeHtml(game.genre || 'Gênero n/d')}</span>
+            </div>
+            <div class="desc">${escapeHtml((game.synopsis || 'Sem sinopse cadastrada.').slice(0, 220))}${(game.synopsis || '').length > 220 ? '...' : ''}</div>
+            <div class="card-actions">
+              <button class="secondary" onclick="editGame('${game.id}')">Editar</button>
+              <button class="danger" onclick="handleDelete('${game.id}')">Excluir</button>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    async function fetchGameData() {
+      const title = el.title.value.trim();
+      const apiKey = getApiKey();
+
+      if (!title) {
+        setStatus('Digite um título antes de buscar.');
+        return;
+      }
+
+      if (!apiKey) {
+        setStatus('Cadastre sua chave da RAWG API para usar a busca automática.', true);
+        return;
+      }
+
+      setStatus('Buscando dados do jogo...');
+
+      try {
+        const searchUrl = `https://api.rawg.io/api/games?key=${encodeURIComponent(apiKey)}&search=${encodeURIComponent(title)}&page_size=10`;
+        const searchRes = await fetch(searchUrl);
+        if (!searchRes.ok) throw new Error('Falha na busca.');
+        const searchData = await searchRes.json();
+        const results = Array.isArray(searchData.results) ? searchData.results : [];
+        if (!results.length) {
+          setStatus('Nenhum resultado encontrado para esse título.', true);
+          return;
+        }
+
+        const normalizedPlatform = el.platform.value === 'PS2' ? 'PlayStation 2' : 'Xbox 360';
+
+        const bestMatch = results.find(item =>
+          Array.isArray(item.platforms) &&
+          item.platforms.some(p => (p.platform?.name || '').toLowerCase() === normalizedPlatform.toLowerCase())
+        ) || results[0];
+
+        const detailRes = await fetch(`https://api.rawg.io/api/games/${bestMatch.id}?key=${encodeURIComponent(apiKey)}`);
+        if (!detailRes.ok) throw new Error('Falha ao buscar detalhes.');
+        const detail = await detailRes.json();
+
+        el.title.value = detail.name || bestMatch.name || title;
+        el.year.value = (detail.released || bestMatch.released || '').slice(0, 4);
+        el.genre.value = (detail.genres || bestMatch.genres || []).map(g => g.name).join(', ');
+        el.cover.value = detail.background_image || bestMatch.background_image || '';
+        const cleanDescription = (detail.description_raw || bestMatch.slug || '').trim();
+        el.synopsis.value = cleanDescription || el.synopsis.value;
+        setStatus('Dados encontrados e preenchidos no formulário.');
+      } catch (error) {
+        console.error(error);
+        setStatus('Não foi possível consultar a API agora. Você pode preencher manualmente.', true);
+      }
+    }
+
+    function saveCurrentGame() {
+      const title = el.title.value.trim();
+      if (!title) {
+        setStatus('O título é obrigatório.', true);
+        return;
+      }
+
+      const game = {
+        id: editingId || crypto.randomUUID(),
+        title,
+        platform: el.platform.value,
+        category: el.category.value,
+        year: el.year.value.trim(),
+        genre: el.genre.value.trim(),
+        cover: el.cover.value.trim(),
+        synopsis: el.synopsis.value.trim(),
+        updatedAt: new Date().toISOString()
+      };
+
+      upsertGame(game);
+      resetForm(true);
+      setStatus('Jogo salvo com sucesso.');
+    }
+
+    function exportBackup() {
+      const games = loadGames();
+      const blob = new Blob([JSON.stringify(games, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'catalogo-retro-games-backup.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function importBackup(file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          if (!Array.isArray(data)) throw new Error('Formato inválido');
+          saveGames(data);
+          render();
+          setStatus('Backup restaurado com sucesso.');
+        } catch (err) {
+          setStatus('Arquivo JSON inválido.', true);
+        }
+      };
+      reader.readAsText(file, 'utf-8');
+    }
+
+    function saveApiKey() {
+      localStorage.setItem(API_KEY_STORAGE, el.apiKey.value.trim());
+      setStatus('Chave da API salva.');
+    }
+
+    function removeApiKey() {
+      localStorage.removeItem(API_KEY_STORAGE);
+      el.apiKey.value = '';
+      setStatus('Chave da API removida.');
+    }
+
+    function setPlatform(platform) {
+      currentPlatform = platform;
+      el.platform.value = platform;
+      el.tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.platform === platform));
+      render();
+    }
+
+    function handleDelete(id) {
+      if (confirm('Deseja excluir este jogo do catálogo?')) {
+        removeGame(id);
+        setStatus('Jogo removido.');
+      }
+    }
+
+    window.editGame = editGame;
+    window.handleDelete = handleDelete;
+
+    el.fetchBtn.addEventListener('click', fetchGameData);
+    el.saveBtn.addEventListener('click', saveCurrentGame);
+    el.clearBtn.addEventListener('click', () => { resetForm(true); setStatus('Formulário limpo.'); });
+    el.searchInput.addEventListener('input', render);
+    el.filterCategory.addEventListener('change', render);
+    el.sortSelect.addEventListener('change', render);
+    el.exportBtn.addEventListener('click', exportBackup);
+    el.importInput.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (file) importBackup(file);
+      e.target.value = '';
+    });
+    el.saveApiBtn.addEventListener('click', saveApiKey);
+    el.removeApiBtn.addEventListener('click', removeApiKey);
+    el.tabs.forEach(tab => tab.addEventListener('click', () => setPlatform(tab.dataset.platform)));
+
+    el.apiKey.value = getApiKey();
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', async () => {
+        try { await navigator.serviceWorker.register('./sw.js'); }
+        catch (e) { console.warn('SW error', e); }
+      });
+    }
+
+    render();
+  </script>
+</body>
+</html>

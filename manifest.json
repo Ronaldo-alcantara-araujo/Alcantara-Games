@@ -1,0 +1,27 @@
+{
+  "name": "Catálogo Retrô Games",
+  "short_name": "Retrô Games",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#0b0b0b",
+  "description": "PWA para catalogar jogos de Xbox 360 e PS2 com capa e sinopse automáticas.",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
