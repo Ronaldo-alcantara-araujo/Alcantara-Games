@@ -2,543 +2,762 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Catálogo Retrô Games</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0b0b" />
-  <meta name="description" content="PWA para catalogar jogos de Xbox 360 e PS2 com busca automática de capa e sinopse." />
+  <title>Alcantara Games</title>
   <link rel="manifest" href="manifest.json" />
   <style>
-    :root{
-      --bg:#050505; --panel:#101010; --panel2:#171717; --line:#262626;
-      --gold:#d4af37; --text:#f4f4f4; --muted:#b6b6b6; --danger:#d9534f; --ok:#4caf50;
+    :root {
+      --bg: #050505;
+      --panel: #101010;
+      --panel-2: #161616;
+      --gold: #d4af37;
+      --gold-2: #f1d26b;
+      --text: #f5f1df;
+      --muted: #a49b7a;
+      --line: rgba(212, 175, 55, 0.18);
+      --danger: #ad3131;
+      --success: #2f8a53;
+      --shadow: 0 12px 30px rgba(0,0,0,.35);
+      --radius: 18px;
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0; font-family:Arial, Helvetica, sans-serif; background:linear-gradient(180deg,#050505,#0b0b0b 35%,#090909);
-      color:var(--text);
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(212,175,55,0.12), transparent 28%),
+        linear-gradient(180deg, #060606 0%, #0a0a0a 100%);
+      color: var(--text);
+      min-height: 100vh;
     }
-    .wrap{max-width:1200px; margin:0 auto; padding:16px}
-    .hero{
-      background:linear-gradient(180deg,rgba(212,175,55,.18),rgba(212,175,55,.04));
-      border:1px solid rgba(212,175,55,.18); border-radius:22px; padding:20px; margin-bottom:16px;
-      box-shadow:0 8px 24px rgba(0,0,0,.35);
+    .app {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 18px 14px 90px;
     }
-    .brand{display:flex; align-items:center; gap:14px}
-    .brand .logo{
-      width:60px; height:60px; border-radius:18px; border:1px solid rgba(212,175,55,.35);
-      display:grid; place-items:center; color:var(--gold); font-size:28px; background:#0f0f0f;
+    .hero {
+      background: linear-gradient(135deg, rgba(212,175,55,0.12), rgba(255,255,255,0.01));
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 16px;
     }
-    h1{margin:0 0 4px; font-size:26px}
-    .sub{color:var(--muted); margin:0}
-    .tabs{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap}
-    .tab{
-      border:1px solid var(--line); background:var(--panel); color:var(--text); padding:12px 16px; border-radius:14px;
-      cursor:pointer; font-weight:700;
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -35%;
+      width: 32%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(241,210,107,.12), transparent);
+      animation: shine 4.5s linear infinite;
     }
-    .tab.active{border-color:rgba(212,175,55,.45); color:var(--gold); box-shadow:inset 0 0 0 1px rgba(212,175,55,.18)}
-    .grid{display:grid; grid-template-columns:360px 1fr; gap:16px}
-    .panel{
-      background:var(--panel); border:1px solid var(--line); border-radius:22px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,.25);
+    @keyframes shine { to { left: 120%; } }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
     }
-    .panel h2{margin:0 0 14px; font-size:18px; color:var(--gold)}
-    label{display:block; font-size:13px; color:#ddd; margin:10px 0 6px}
-    input, select, textarea{
-      width:100%; background:var(--panel2); color:var(--text); border:1px solid #303030; border-radius:14px; padding:12px 14px; outline:none;
+    .logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      color: #111;
+      background: linear-gradient(180deg, var(--gold-2), var(--gold));
+      box-shadow: 0 8px 22px rgba(212,175,55,.25);
+      letter-spacing: 1px;
     }
-    textarea{min-height:110px; resize:vertical}
-    .row{display:grid; grid-template-columns:1fr 1fr; gap:10px}
-    .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
-    button{
-      border:none; border-radius:14px; padding:12px 16px; font-weight:700; cursor:pointer;
-      background:linear-gradient(180deg,#d4af37,#b48b17); color:#111;
+    .title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--gold-2);
+      letter-spacing: 0.5px;
     }
-    button.secondary{background:#1c1c1c; color:#fff; border:1px solid #333}
-    button.danger{background:linear-gradient(180deg,#ee6661,#bd403a); color:#fff}
-    .helper{font-size:12px; color:var(--muted); margin-top:8px}
-    .toolbar{display:grid; grid-template-columns:1.2fr .8fr .8fr auto auto; gap:10px; margin-bottom:14px}
-    .cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px}
-    .card{
-      background:linear-gradient(180deg,#111,#0c0c0c); border:1px solid #252525; border-radius:18px; overflow:hidden;
-      display:flex; flex-direction:column; min-height:100%;
+    .subtitle { color: var(--muted); font-size: .95rem; }
+    .grid {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 16px;
+      align-items: start;
     }
-    .cover{
-      width:100%; aspect-ratio: 3 / 4; background:#171717; display:flex; align-items:center; justify-content:center; color:#777; font-size:13px;
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
     }
-    .cover img{width:100%; height:100%; object-fit:cover}
-    .card-body{padding:12px}
-    .title{font-size:16px; font-weight:800; line-height:1.25; margin-bottom:6px}
-    .meta{font-size:12px; color:var(--gold); margin-bottom:8px}
-    .desc{font-size:13px; color:#d7d7d7; line-height:1.4; min-height:74px}
-    .badges{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0}
-    .badge{
-      font-size:11px; background:#1a1a1a; border:1px solid #2d2d2d; color:#ddd; padding:6px 8px; border-radius:999px;
+    .section-title {
+      font-size: .86rem;
+      font-weight: 800;
+      letter-spacing: 1.4px;
+      color: var(--gold);
+      margin: 0 0 14px;
+      text-transform: uppercase;
     }
-    .card-actions{display:flex; gap:8px; margin-top:auto}
-    .card-actions button{flex:1; padding:10px 12px}
-    .empty{padding:22px; text-align:center; color:var(--muted); border:1px dashed #333; border-radius:18px}
-    .settings{
-      margin-top:16px; padding-top:16px; border-top:1px solid #232323;
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
-    .status{
-      margin-top:10px; font-size:13px; color:var(--muted);
+    .form-grid .full { grid-column: 1 / -1; }
+    label {
+      display: block;
+      font-size: .78rem;
+      color: var(--muted);
+      margin-bottom: 6px;
     }
-    .topline{display:flex; justify-content:space-between; gap:8px; align-items:center; margin-bottom:12px; flex-wrap:wrap}
-    .counter{color:var(--muted); font-size:13px}
-    @media (max-width: 920px){
-      .grid{grid-template-columns:1fr}
-      .toolbar{grid-template-columns:1fr 1fr}
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(212,175,55,.12);
+      background: #0d0d0d;
+      color: var(--text);
+      outline: none;
     }
-    @media (max-width: 620px){
-      .row,.toolbar{grid-template-columns:1fr}
-      .brand .logo{width:54px;height:54px}
-      h1{font-size:22px}
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(212,175,55,.4);
+      box-shadow: 0 0 0 3px rgba(212,175,55,.08);
+    }
+    textarea { resize: vertical; min-height: 90px; }
+    .btn-row, .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+    .btn:active { transform: scale(.98); }
+    .btn-primary {
+      color: #151515;
+      background: linear-gradient(180deg, var(--gold-2), var(--gold));
+    }
+    .btn-secondary {
+      color: var(--text);
+      background: #171717;
+      border: 1px solid var(--line);
+    }
+    .btn-danger {
+      color: #fff;
+      background: linear-gradient(180deg, #bf3e3e, #922727);
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .stat {
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .stat strong {
+      display: block;
+      font-size: 1.3rem;
+      color: var(--gold-2);
+      margin-top: 5px;
+    }
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .game-card {
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+    }
+    .cover {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      background: linear-gradient(135deg, rgba(212,175,55,.18), rgba(255,255,255,.02));
+      object-fit: cover;
+    }
+    .fallback-cover {
+      display: grid;
+      place-items: center;
+      color: var(--gold-2);
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding: 18px;
+      text-align: center;
+      font-size: 1rem;
+    }
+    .game-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+    .game-title { font-weight: 800; line-height: 1.2; }
+    .meta { color: var(--muted); font-size: .82rem; line-height: 1.3; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      font-size: .72rem;
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: rgba(212,175,55,.08);
+      border: 1px solid rgba(212,175,55,.16);
+      color: var(--gold-2);
+    }
+    .chip.status-jogando { color: #9dd0ff; border-color: rgba(157,208,255,.25); background: rgba(157,208,255,.08); }
+    .chip.status-zerado { color: #9ef0bc; border-color: rgba(158,240,188,.25); background: rgba(158,240,188,.08); }
+    .chip.status-backlog { color: #ffd58e; border-color: rgba(255,213,142,.25); background: rgba(255,213,142,.08); }
+    .actions { display: flex; gap: 8px; margin-top: auto; }
+    .actions .btn { flex: 1; padding: 10px 8px; font-size: .82rem; }
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 40px 18px;
+      border: 1px dashed rgba(212,175,55,.18);
+      border-radius: 16px;
+      background: rgba(255,255,255,.015);
+    }
+    .footer-note { margin-top: 12px; color: var(--muted); font-size: .84rem; }
+    .install-banner {
+      position: sticky;
+      bottom: 10px;
+      z-index: 20;
+      margin-top: 18px;
+      display: none;
+    }
+    .install-inner {
+      background: linear-gradient(180deg, #171717, #0e0e0e);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .filters { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .app { padding: 12px 10px 90px; }
+      .form-grid, .filters { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .title { font-size: 1.25rem; }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
+  <div class="app">
     <section class="hero">
       <div class="brand">
-        <div class="logo">🎮</div>
+        <div class="logo">AG</div>
         <div>
-          <h1>Catálogo Retrô Games</h1>
-          <p class="sub">PWA para organizar sua coleção de Xbox 360 e PS2 com capa e sinopse automáticas.</p>
+          <div class="title">Alcantara Games</div>
+          <div class="subtitle">Catálogo premium PWA para sua coleção retrô e expansão futura</div>
         </div>
       </div>
-
-      <div class="tabs">
-        <button class="tab active" data-platform="Xbox 360">Xbox 360</button>
-        <button class="tab" data-platform="PS2">PS2</button>
+      <div class="stats">
+        <div class="stat"><span>Total</span><strong id="statTotal">0</strong></div>
+        <div class="stat"><span>Favoritos</span><strong id="statFav">0</strong></div>
+        <div class="stat"><span>Zerados</span><strong id="statDone">0</strong></div>
+        <div class="stat"><span>Plataformas</span><strong id="statPlatforms">0</strong></div>
       </div>
     </section>
 
     <div class="grid">
-      <aside class="panel">
-        <h2>Cadastrar / editar jogo</h2>
-
-        <label for="title">Título do jogo</label>
-        <input id="title" type="text" placeholder="Ex.: Need for Speed Most Wanted" />
-
-        <div class="row">
-          <div>
-            <label for="platform">Plataforma</label>
-            <select id="platform">
-              <option>Xbox 360</option>
-              <option>PS2</option>
-            </select>
+      <section class="card">
+        <h2 class="section-title">Cadastro tático</h2>
+        <form id="gameForm">
+          <input type="hidden" id="gameId" />
+          <div class="form-grid">
+            <div class="full">
+              <label for="title">Título do jogo</label>
+              <input id="title" required placeholder="Ex.: God of War II" />
+            </div>
+            <div>
+              <label for="platform">Plataforma</label>
+              <select id="platform">
+                <option>PS2</option>
+                <option>Xbox 360</option>
+                <option>PS3</option>
+                <option>PC</option>
+                <option>Outros</option>
+              </select>
+            </div>
+            <div>
+              <label for="category">Categoria</label>
+              <input id="category" placeholder="Ex.: Ação, Terror, Corrida" />
+            </div>
+            <div>
+              <label for="status">Status</label>
+              <select id="status">
+                <option value="backlog">Backlog</option>
+                <option value="jogando">Jogando</option>
+                <option value="zerado">Zerado</option>
+              </select>
+            </div>
+            <div>
+              <label for="mediaType">Mídia</label>
+              <select id="mediaType">
+                <option value="fisica">Física</option>
+                <option value="digital">Digital</option>
+              </select>
+            </div>
+            <div>
+              <label for="year">Ano</label>
+              <input id="year" placeholder="Ex.: 2005" />
+            </div>
+            <div>
+              <label for="genre">Gênero</label>
+              <input id="genre" placeholder="Ex.: Hack and Slash" />
+            </div>
+            <div>
+              <label for="rating">Nota geral</label>
+              <input id="rating" type="number" min="0" max="10" step="0.1" placeholder="0 a 10" />
+            </div>
+            <div class="full">
+              <label for="coverUrl">URL da capa</label>
+              <input id="coverUrl" placeholder="Pode deixar em branco e usar busca inteligente" />
+            </div>
+            <div class="full">
+              <label for="summary">Sinopse</label>
+              <textarea id="summary" placeholder="Resumo do jogo"></textarea>
+            </div>
+            <div class="full toolbar">
+              <button type="button" class="btn btn-secondary" id="autoFillBtn">Busca inteligente</button>
+              <button type="button" class="btn btn-secondary" id="favoriteBtn">Favorito: Não</button>
+              <button type="submit" class="btn btn-primary" id="saveBtn">Salvar jogo</button>
+              <button type="button" class="btn btn-danger" id="clearBtn">Limpar</button>
+            </div>
           </div>
-          <div>
-            <label for="category">Categoria</label>
-            <select id="category">
-              <option>Ação</option>
-              <option>Aventura</option>
-              <option>Corrida</option>
-              <option>Esporte</option>
-              <option>FPS</option>
-              <option>Luta</option>
-              <option>RPG</option>
-              <option>Simulação</option>
-              <option>Terror</option>
-              <option>Estratégia</option>
-              <option>Infantil</option>
-              <option>Outros</option>
-            </select>
-          </div>
-        </div>
+        </form>
+        <div class="footer-note">Sem API. O app tenta preencher usando banco interno offline e capa automática por URL sugestiva. Quando você completar um jogo manualmente, ele passa a reaproveitar os dados nas próximas buscas.</div>
+      </section>
 
-        <div class="row">
-          <div>
-            <label for="year">Ano</label>
-            <input id="year" type="text" placeholder="Automático ou manual" />
-          </div>
-          <div>
-            <label for="genre">Gênero</label>
-            <input id="genre" type="text" placeholder="Automático ou manual" />
-          </div>
-        </div>
-
-        <label for="cover">URL da capinha</label>
-        <input id="cover" type="url" placeholder="Preenchido pela API ou manualmente" />
-
-        <label for="synopsis">Sinopse</label>
-        <textarea id="synopsis" placeholder="Preenchida pela API ou manualmente"></textarea>
-
-        <div class="btns">
-          <button id="fetchBtn" type="button">Buscar capa e sinopse</button>
-          <button id="saveBtn" type="button">Salvar jogo</button>
-          <button id="clearBtn" class="secondary" type="button">Limpar</button>
-        </div>
-
-        <div class="helper">
-          Digite o título e toque em <strong>Buscar capa e sinopse</strong>. O app usa uma integração opcional com a RAWG API.
-        </div>
-
-        <div class="settings">
-          <h2>Configuração da API</h2>
-          <label for="apiKey">RAWG API Key</label>
-          <input id="apiKey" type="text" placeholder="Cole sua chave aqui" />
-          <div class="btns">
-            <button id="saveApiBtn" type="button">Salvar chave</button>
-            <button id="removeApiBtn" class="secondary" type="button">Remover chave</button>
-          </div>
-          <div class="helper">
-            Sem chave, o app continua funcionando como catálogo manual. Com chave, ele tenta preencher dados automaticamente.
-          </div>
-          <div id="status" class="status"></div>
-        </div>
-      </aside>
-
-      <main class="panel">
-        <div class="topline">
-          <h2 id="listTitle">Coleção Xbox 360</h2>
-          <div id="counter" class="counter">0 jogo(s)</div>
-        </div>
-
-        <div class="toolbar">
-          <input id="searchInput" type="text" placeholder="Buscar no catálogo..." />
-          <select id="filterCategory">
-            <option value="">Todas as categorias</option>
-            <option>Ação</option>
-            <option>Aventura</option>
-            <option>Corrida</option>
-            <option>Esporte</option>
-            <option>FPS</option>
-            <option>Luta</option>
-            <option>RPG</option>
-            <option>Simulação</option>
-            <option>Terror</option>
-            <option>Estratégia</option>
-            <option>Infantil</option>
+      <section class="card">
+        <h2 class="section-title">Acervo operacional</h2>
+        <div class="filters">
+          <input id="searchInput" placeholder="Buscar por título, gênero ou sinopse" />
+          <select id="filterPlatform">
+            <option value="">Todas plataformas</option>
+            <option>PS2</option>
+            <option>Xbox 360</option>
+            <option>PS3</option>
+            <option>PC</option>
             <option>Outros</option>
           </select>
-          <select id="sortSelect">
-            <option value="title">Ordenar: título</option>
-            <option value="year">Ordenar: ano</option>
-            <option value="category">Ordenar: categoria</option>
+          <select id="filterStatus">
+            <option value="">Todos status</option>
+            <option value="backlog">Backlog</option>
+            <option value="jogando">Jogando</option>
+            <option value="zerado">Zerado</option>
           </select>
-          <button id="exportBtn" class="secondary" type="button">Backup JSON</button>
-          <label class="secondary" style="display:flex;align-items:center;justify-content:center;border-radius:14px;padding:12px 16px;cursor:pointer;border:1px solid #333;background:#1c1c1c;">
-            Restaurar
-            <input id="importInput" type="file" accept=".json" style="display:none" />
-          </label>
+          <select id="filterMedia">
+            <option value="">Todas mídias</option>
+            <option value="fisica">Física</option>
+            <option value="digital">Digital</option>
+          </select>
+          <select id="sortBy">
+            <option value="recent">Mais recentes</option>
+            <option value="az">A-Z</option>
+            <option value="rating">Melhor nota</option>
+          </select>
         </div>
+        <div class="toolbar" style="margin-bottom:14px;">
+          <button class="btn btn-secondary" id="exportBtn">Backup JSON</button>
+          <label class="btn btn-secondary" for="importFile" style="display:inline-flex; align-items:center;">Restaurar JSON</label>
+          <input id="importFile" type="file" accept="application/json" hidden />
+        </div>
+        <div id="gamesContainer" class="games-grid"></div>
+      </section>
+    </div>
 
-        <div id="cards" class="cards"></div>
-      </main>
+    <div id="installBanner" class="install-banner">
+      <div class="install-inner">
+        <div>
+          <strong style="color:var(--gold-2)">Instalar Alcantara Games</strong>
+          <div style="color:var(--muted); font-size:.9rem;">Abra como app no Android com acesso rápido pela tela inicial.</div>
+        </div>
+        <button id="installBtn" class="btn btn-primary">Instalar</button>
+      </div>
     </div>
   </div>
 
-  <script>
-    const STORAGE_KEY = 'retro-games-catalog-v1';
-    const API_KEY_STORAGE = 'retro-games-rawg-key';
-    let editingId = null;
-    let currentPlatform = 'Xbox 360';
+<script>
+(() => {
+  const STORAGE_KEY = 'alcantara_games_catalog_v1';
+  const favoriteBtn = document.getElementById('favoriteBtn');
+  let favoriteValue = false;
+  let deferredPrompt = null;
 
-    const el = {
-      tabs: [...document.querySelectorAll('.tab')],
-      title: document.getElementById('title'),
-      platform: document.getElementById('platform'),
-      category: document.getElementById('category'),
-      year: document.getElementById('year'),
-      genre: document.getElementById('genre'),
-      cover: document.getElementById('cover'),
-      synopsis: document.getElementById('synopsis'),
-      fetchBtn: document.getElementById('fetchBtn'),
-      saveBtn: document.getElementById('saveBtn'),
-      clearBtn: document.getElementById('clearBtn'),
-      cards: document.getElementById('cards'),
-      searchInput: document.getElementById('searchInput'),
-      filterCategory: document.getElementById('filterCategory'),
-      sortSelect: document.getElementById('sortSelect'),
-      listTitle: document.getElementById('listTitle'),
-      counter: document.getElementById('counter'),
-      exportBtn: document.getElementById('exportBtn'),
-      importInput: document.getElementById('importInput'),
-      apiKey: document.getElementById('apiKey'),
-      saveApiBtn: document.getElementById('saveApiBtn'),
-      removeApiBtn: document.getElementById('removeApiBtn'),
-      status: document.getElementById('status'),
+  const fallbackDb = {
+    'god of war ii': {
+      platform: 'PS2', category: 'Ação', genre: 'Hack and Slash', year: '2007', rating: '9.3',
+      summary: 'Kratos enfrenta os deuses do Olimpo em uma campanha intensa com combates brutais, quebra-cabeças e chefes épicos.'
+    },
+    'gta san andreas': {
+      platform: 'PS2', category: 'Mundo Aberto', genre: 'Ação / Aventura', year: '2004', rating: '9.5',
+      summary: 'CJ retorna para Los Santos e se envolve em guerras de gangues, missões variadas e exploração de um enorme mapa aberto.'
+    },
+    'resident evil 4': {
+      platform: 'PS2', category: 'Terror', genre: 'Survival Horror', year: '2005', rating: '9.4',
+      summary: 'Leon S. Kennedy parte em uma missão de resgate em uma vila isolada dominada por uma ameaça biológica violenta.'
+    },
+    'shadow of the colossus': {
+      platform: 'PS2', category: 'Aventura', genre: 'Ação / Puzzle', year: '2005', rating: '9.2',
+      summary: 'Um guerreiro percorre terras proibidas para derrotar colossos gigantes em busca de ressuscitar uma jovem.'
+    },
+    'black': {
+      platform: 'PS2', category: 'Tiro', genre: 'FPS', year: '2006', rating: '8.7',
+      summary: 'FPS cinematográfico focado em destruição, impacto sonoro forte e tiroteios intensos em ritmo acelerado.'
+    },
+    'halo 3': {
+      platform: 'Xbox 360', category: 'Tiro', genre: 'FPS', year: '2007', rating: '9.1',
+      summary: 'Master Chief retorna para encerrar a trilogia em batalhas épicas com campanha marcante e multiplayer lendário.'
+    },
+    'gears of war 3': {
+      platform: 'Xbox 360', category: 'Ação', genre: 'TPS', year: '2011', rating: '8.9',
+      summary: 'Conflito total entre a humanidade e a ameaça Locust em um jogo de tiro tático com cooperação intensa.'
+    },
+    'forza horizon': {
+      platform: 'Xbox 360', category: 'Corrida', genre: 'Racing', year: '2012', rating: '8.8',
+      summary: 'Corrida em mundo aberto com grande variedade de carros, eventos e exploração em clima de festival automotivo.'
+    },
+    'red dead redemption': {
+      platform: 'Xbox 360', category: 'Mundo Aberto', genre: 'Ação / Aventura', year: '2010', rating: '9.6',
+      summary: 'John Marston cruza o velho oeste em uma jornada dramática por redenção, vingança e sobrevivência.'
+    },
+    'metal gear solid 3': {
+      platform: 'PS2', category: 'Stealth', genre: 'Ação / Espionagem', year: '2004', rating: '9.4',
+      summary: 'Naked Snake enfrenta uma missão histórica na selva soviética em um clássico da espionagem tática.'
+    }
+  };
+
+  const els = {
+    form: document.getElementById('gameForm'),
+    gameId: document.getElementById('gameId'),
+    title: document.getElementById('title'),
+    platform: document.getElementById('platform'),
+    category: document.getElementById('category'),
+    status: document.getElementById('status'),
+    mediaType: document.getElementById('mediaType'),
+    year: document.getElementById('year'),
+    genre: document.getElementById('genre'),
+    rating: document.getElementById('rating'),
+    coverUrl: document.getElementById('coverUrl'),
+    summary: document.getElementById('summary'),
+    saveBtn: document.getElementById('saveBtn'),
+    clearBtn: document.getElementById('clearBtn'),
+    autoFillBtn: document.getElementById('autoFillBtn'),
+    searchInput: document.getElementById('searchInput'),
+    filterPlatform: document.getElementById('filterPlatform'),
+    filterStatus: document.getElementById('filterStatus'),
+    filterMedia: document.getElementById('filterMedia'),
+    sortBy: document.getElementById('sortBy'),
+    gamesContainer: document.getElementById('gamesContainer'),
+    exportBtn: document.getElementById('exportBtn'),
+    importFile: document.getElementById('importFile'),
+    statTotal: document.getElementById('statTotal'),
+    statFav: document.getElementById('statFav'),
+    statDone: document.getElementById('statDone'),
+    statPlatforms: document.getElementById('statPlatforms'),
+    installBanner: document.getElementById('installBanner'),
+    installBtn: document.getElementById('installBtn'),
+  };
+
+  function loadGames() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch { return []; }
+  }
+
+  function saveGames(games) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(games));
+  }
+
+  function slugify(value='') {
+    return value.toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+  }
+
+  function safeCoverUrl(title) {
+    const key = slugify(title).replace(/[^a-z0-9]+/g, '-');
+    return `https://images.igdb.com/igdb/image/upload/t_cover_big/${key}.jpg`;
+  }
+
+  function getGames() { return loadGames(); }
+
+  function setFavorite(active) {
+    favoriteValue = !!active;
+    favoriteBtn.textContent = `Favorito: ${favoriteValue ? 'Sim' : 'Não'}`;
+    favoriteBtn.className = favoriteValue ? 'btn btn-primary' : 'btn btn-secondary';
+  }
+
+  function clearForm() {
+    els.form.reset();
+    els.gameId.value = '';
+    els.platform.value = 'PS2';
+    els.status.value = 'backlog';
+    els.mediaType.value = 'fisica';
+    setFavorite(false);
+    els.saveBtn.textContent = 'Salvar jogo';
+  }
+
+  function storeLearnedData(game) {
+    const key = slugify(game.title);
+    if (!key) return;
+    fallbackDb[key] = {
+      platform: game.platform,
+      category: game.category,
+      genre: game.genre,
+      year: game.year,
+      rating: game.rating,
+      summary: game.summary
     };
+  }
 
-    function loadGames() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-      catch { return []; }
+  function smartFill(title) {
+    const key = slugify(title);
+    const found = fallbackDb[key];
+    if (found) {
+      if (!els.platform.value || els.platform.value === 'Outros') els.platform.value = found.platform || 'Outros';
+      if (!els.category.value) els.category.value = found.category || '';
+      if (!els.genre.value) els.genre.value = found.genre || '';
+      if (!els.year.value) els.year.value = found.year || '';
+      if (!els.rating.value) els.rating.value = found.rating || '';
+      if (!els.summary.value) els.summary.value = found.summary || '';
     }
-
-    function saveGames(games) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(games));
+    if (!els.coverUrl.value && title.trim()) {
+      els.coverUrl.value = safeCoverUrl(title.trim());
     }
+  }
 
-    function getApiKey() {
-      return localStorage.getItem(API_KEY_STORAGE) || '';
-    }
-
-    function setStatus(msg, isError = false) {
-      el.status.textContent = msg;
-      el.status.style.color = isError ? '#ff8f8f' : '#b6b6b6';
-    }
-
-    function escapeHtml(text = '') {
-      return text
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;');
-    }
-
-    function resetForm(keepPlatform = true) {
-      editingId = null;
-      const savedPlatform = el.platform.value;
-      el.title.value = '';
-      el.category.value = 'Ação';
-      el.year.value = '';
-      el.genre.value = '';
-      el.cover.value = '';
-      el.synopsis.value = '';
-      el.platform.value = keepPlatform ? savedPlatform : 'Xbox 360';
-      el.saveBtn.textContent = 'Salvar jogo';
-    }
-
-    function upsertGame(game) {
-      const games = loadGames();
+  function upsertGame(game) {
+    const games = getGames();
+    if (game.id) {
       const idx = games.findIndex(g => g.id === game.id);
       if (idx >= 0) games[idx] = game;
-      else games.push(game);
-      saveGames(games);
-      render();
+    } else {
+      game.id = crypto.randomUUID ? crypto.randomUUID() : String(Date.now());
+      games.unshift(game);
+    }
+    saveGames(games);
+    storeLearnedData(game);
+    render();
+    clearForm();
+  }
+
+  function removeGame(id) {
+    const games = getGames().filter(g => g.id !== id);
+    saveGames(games);
+    render();
+  }
+
+  function editGame(id) {
+    const game = getGames().find(g => g.id === id);
+    if (!game) return;
+    els.gameId.value = game.id;
+    els.title.value = game.title || '';
+    els.platform.value = game.platform || 'PS2';
+    els.category.value = game.category || '';
+    els.status.value = game.status || 'backlog';
+    els.mediaType.value = game.mediaType || 'fisica';
+    els.year.value = game.year || '';
+    els.genre.value = game.genre || '';
+    els.rating.value = game.rating || '';
+    els.coverUrl.value = game.coverUrl || '';
+    els.summary.value = game.summary || '';
+    setFavorite(game.favorite);
+    els.saveBtn.textContent = 'Atualizar jogo';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function exportJson() {
+    const blob = new Blob([JSON.stringify(getGames(), null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'alcantara-games-backup.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function importJson(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        if (!Array.isArray(data)) throw new Error('Formato inválido');
+        saveGames(data);
+        render();
+        alert('Backup restaurado com sucesso.');
+      } catch {
+        alert('Arquivo inválido para restauração.');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function renderStats(games) {
+    els.statTotal.textContent = games.length;
+    els.statFav.textContent = games.filter(g => g.favorite).length;
+    els.statDone.textContent = games.filter(g => g.status === 'zerado').length;
+    els.statPlatforms.textContent = new Set(games.map(g => g.platform).filter(Boolean)).size;
+  }
+
+  function render() {
+    const games = getGames();
+    renderStats(games);
+
+    const q = slugify(els.searchInput.value);
+    const fp = els.filterPlatform.value;
+    const fs = els.filterStatus.value;
+    const fm = els.filterMedia.value;
+    const sortBy = els.sortBy.value;
+
+    let filtered = games.filter(g => {
+      const hay = slugify(`${g.title} ${g.genre} ${g.summary} ${g.category}`);
+      return (!q || hay.includes(q)) &&
+             (!fp || g.platform === fp) &&
+             (!fs || g.status === fs) &&
+             (!fm || g.mediaType === fm);
+    });
+
+    filtered.sort((a, b) => {
+      if (sortBy === 'az') return (a.title || '').localeCompare(b.title || '');
+      if (sortBy === 'rating') return (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0);
+      return (b.createdAt || 0) - (a.createdAt || 0);
+    });
+
+    if (!filtered.length) {
+      els.gamesContainer.innerHTML = `<div class="empty">Nenhum jogo encontrado. Cadastre o primeiro título e monte seu acervo.</div>`;
+      return;
     }
 
-    function removeGame(id) {
-      const games = loadGames().filter(g => g.id !== id);
-      saveGames(games);
-      render();
-    }
-
-    function editGame(id) {
-      const games = loadGames();
-      const game = games.find(g => g.id === id);
-      if (!game) return;
-      editingId = id;
-      el.title.value = game.title || '';
-      el.platform.value = game.platform || 'Xbox 360';
-      el.category.value = game.category || 'Outros';
-      el.year.value = game.year || '';
-      el.genre.value = game.genre || '';
-      el.cover.value = game.cover || '';
-      el.synopsis.value = game.synopsis || '';
-      el.saveBtn.textContent = 'Atualizar jogo';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function render() {
-      const games = loadGames();
-      const term = el.searchInput.value.trim().toLowerCase();
-      const category = el.filterCategory.value;
-      const sortBy = el.sortSelect.value;
-
-      let filtered = games.filter(g => g.platform === currentPlatform);
-
-      if (term) {
-        filtered = filtered.filter(g =>
-          [g.title, g.synopsis, g.genre, g.category].join(' ').toLowerCase().includes(term)
-        );
-      }
-      if (category) {
-        filtered = filtered.filter(g => g.category === category);
-      }
-
-      filtered.sort((a, b) => {
-        if (sortBy === 'year') return String(a.year || '').localeCompare(String(b.year || ''));
-        if (sortBy === 'category') return String(a.category || '').localeCompare(String(b.category || ''));
-        return String(a.title || '').localeCompare(String(b.title || ''));
-      });
-
-      el.listTitle.textContent = `Coleção ${currentPlatform}`;
-      el.counter.textContent = `${filtered.length} jogo(s)`;
-
-      if (!filtered.length) {
-        el.cards.innerHTML = `<div class="empty">Nenhum jogo encontrado nessa plataforma com os filtros atuais.</div>`;
-        return;
-      }
-
-      el.cards.innerHTML = filtered.map(game => `
-        <article class="card">
-          <div class="cover">
-            ${game.cover ? `<img src="${escapeHtml(game.cover)}" alt="Capa de ${escapeHtml(game.title)}" loading="lazy" onerror="this.parentNode.innerHTML='Capa indisponível';" />` : 'Sem capa'}
-          </div>
-          <div class="card-body">
-            <div class="title">${escapeHtml(game.title)}</div>
-            <div class="meta">${escapeHtml(game.platform)} • ${escapeHtml(game.year || 'Ano n/d')}</div>
-            <div class="badges">
-              <span class="badge">${escapeHtml(game.category || 'Outros')}</span>
-              <span class="badge">${escapeHtml(game.genre || 'Gênero n/d')}</span>
+    els.gamesContainer.innerHTML = filtered.map(game => {
+      const cover = game.coverUrl
+        ? `<img class="cover" src="${game.coverUrl}" alt="${escapeHtml(game.title)}" onerror="this.outerHTML='<div class=\'cover fallback-cover\'>${escapeHtml(game.title)}</div>'">`
+        : `<div class="cover fallback-cover">${escapeHtml(game.title)}</div>`;
+      return `
+        <article class="game-card">
+          ${cover}
+          <div class="game-body">
+            <div class="game-title">${escapeHtml(game.title)}</div>
+            <div class="meta">${escapeHtml(game.platform || '')} • ${escapeHtml(game.year || 'Ano não informado')} • ${escapeHtml(game.genre || 'Gênero não informado')}</div>
+            <div class="chips">
+              <span class="chip">${escapeHtml(game.category || 'Sem categoria')}</span>
+              <span class="chip status-${escapeHtml(game.status || 'backlog')}">${labelStatus(game.status)}</span>
+              <span class="chip">${game.mediaType === 'digital' ? 'Digital' : 'Física'}</span>
+              ${game.favorite ? '<span class="chip">★ Favorito</span>' : ''}
             </div>
-            <div class="desc">${escapeHtml((game.synopsis || 'Sem sinopse cadastrada.').slice(0, 220))}${(game.synopsis || '').length > 220 ? '...' : ''}</div>
-            <div class="card-actions">
-              <button class="secondary" onclick="editGame('${game.id}')">Editar</button>
-              <button class="danger" onclick="handleDelete('${game.id}')">Excluir</button>
+            <div class="meta">${escapeHtml((game.summary || 'Sem sinopse').slice(0, 120))}${(game.summary || '').length > 120 ? '...' : ''}</div>
+            <div class="actions">
+              <button class="btn btn-secondary" onclick="window.__editGame('${game.id}')">Editar</button>
+              <button class="btn btn-danger" onclick="window.__removeGame('${game.id}')">Excluir</button>
             </div>
           </div>
         </article>
-      `).join('');
-    }
+      `;
+    }).join('');
+  }
 
-    async function fetchGameData() {
-      const title = el.title.value.trim();
-      const apiKey = getApiKey();
+  function labelStatus(status) {
+    return status === 'jogando' ? 'Jogando' : status === 'zerado' ? 'Zerado' : 'Backlog';
+  }
 
-      if (!title) {
-        setStatus('Digite um título antes de buscar.');
-        return;
-      }
+  function escapeHtml(str='') {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
 
-      if (!apiKey) {
-        setStatus('Cadastre sua chave da RAWG API para usar a busca automática.', true);
-        return;
-      }
+  els.form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const game = {
+      id: els.gameId.value || undefined,
+      title: els.title.value.trim(),
+      platform: els.platform.value,
+      category: els.category.value.trim(),
+      status: els.status.value,
+      mediaType: els.mediaType.value,
+      year: els.year.value.trim(),
+      genre: els.genre.value.trim(),
+      rating: els.rating.value.trim(),
+      coverUrl: els.coverUrl.value.trim(),
+      summary: els.summary.value.trim(),
+      favorite: favoriteValue,
+      createdAt: els.gameId.value ? (getGames().find(g => g.id === els.gameId.value)?.createdAt || Date.now()) : Date.now(),
+    };
+    if (!game.title) return alert('Informe o título do jogo.');
+    if (!game.coverUrl) game.coverUrl = safeCoverUrl(game.title);
+    upsertGame(game);
+  });
 
-      setStatus('Buscando dados do jogo...');
+  els.clearBtn.addEventListener('click', clearForm);
+  favoriteBtn.addEventListener('click', () => setFavorite(!favoriteValue));
+  els.autoFillBtn.addEventListener('click', () => {
+    if (!els.title.value.trim()) return alert('Digite o título primeiro.');
+    smartFill(els.title.value.trim());
+  });
 
-      try {
-        const searchUrl = `https://api.rawg.io/api/games?key=${encodeURIComponent(apiKey)}&search=${encodeURIComponent(title)}&page_size=10`;
-        const searchRes = await fetch(searchUrl);
-        if (!searchRes.ok) throw new Error('Falha na busca.');
-        const searchData = await searchRes.json();
-        const results = Array.isArray(searchData.results) ? searchData.results : [];
-        if (!results.length) {
-          setStatus('Nenhum resultado encontrado para esse título.', true);
-          return;
-        }
+  [els.searchInput, els.filterPlatform, els.filterStatus, els.filterMedia, els.sortBy]
+    .forEach(el => el.addEventListener('input', render));
+  [els.filterPlatform, els.filterStatus, els.filterMedia, els.sortBy]
+    .forEach(el => el.addEventListener('change', render));
 
-        const normalizedPlatform = el.platform.value === 'PS2' ? 'PlayStation 2' : 'Xbox 360';
+  els.exportBtn.addEventListener('click', exportJson);
+  els.importFile.addEventListener('change', (e) => {
+    if (e.target.files?.[0]) importJson(e.target.files[0]);
+    e.target.value = '';
+  });
 
-        const bestMatch = results.find(item =>
-          Array.isArray(item.platforms) &&
-          item.platforms.some(p => (p.platform?.name || '').toLowerCase() === normalizedPlatform.toLowerCase())
-        ) || results[0];
+  window.__editGame = editGame;
+  window.__removeGame = (id) => {
+    if (confirm('Deseja excluir este jogo?')) removeGame(id);
+  };
 
-        const detailRes = await fetch(`https://api.rawg.io/api/games/${bestMatch.id}?key=${encodeURIComponent(apiKey)}`);
-        if (!detailRes.ok) throw new Error('Falha ao buscar detalhes.');
-        const detail = await detailRes.json();
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    els.installBanner.style.display = 'block';
+  });
 
-        el.title.value = detail.name || bestMatch.name || title;
-        el.year.value = (detail.released || bestMatch.released || '').slice(0, 4);
-        el.genre.value = (detail.genres || bestMatch.genres || []).map(g => g.name).join(', ');
-        el.cover.value = detail.background_image || bestMatch.background_image || '';
-        const cleanDescription = (detail.description_raw || bestMatch.slug || '').trim();
-        el.synopsis.value = cleanDescription || el.synopsis.value;
-        setStatus('Dados encontrados e preenchidos no formulário.');
-      } catch (error) {
-        console.error(error);
-        setStatus('Não foi possível consultar a API agora. Você pode preencher manualmente.', true);
-      }
-    }
+  els.installBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    els.installBanner.style.display = 'none';
+  });
 
-    function saveCurrentGame() {
-      const title = el.title.value.trim();
-      if (!title) {
-        setStatus('O título é obrigatório.', true);
-        return;
-      }
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+  }
 
-      const game = {
-        id: editingId || crypto.randomUUID(),
-        title,
-        platform: el.platform.value,
-        category: el.category.value,
-        year: el.year.value.trim(),
-        genre: el.genre.value.trim(),
-        cover: el.cover.value.trim(),
-        synopsis: el.synopsis.value.trim(),
-        updatedAt: new Date().toISOString()
-      };
-
-      upsertGame(game);
-      resetForm(true);
-      setStatus('Jogo salvo com sucesso.');
-    }
-
-    function exportBackup() {
-      const games = loadGames();
-      const blob = new Blob([JSON.stringify(games, null, 2)], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'catalogo-retro-games-backup.json';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    }
-
-    function importBackup(file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const data = JSON.parse(reader.result);
-          if (!Array.isArray(data)) throw new Error('Formato inválido');
-          saveGames(data);
-          render();
-          setStatus('Backup restaurado com sucesso.');
-        } catch (err) {
-          setStatus('Arquivo JSON inválido.', true);
-        }
-      };
-      reader.readAsText(file, 'utf-8');
-    }
-
-    function saveApiKey() {
-      localStorage.setItem(API_KEY_STORAGE, el.apiKey.value.trim());
-      setStatus('Chave da API salva.');
-    }
-
-    function removeApiKey() {
-      localStorage.removeItem(API_KEY_STORAGE);
-      el.apiKey.value = '';
-      setStatus('Chave da API removida.');
-    }
-
-    function setPlatform(platform) {
-      currentPlatform = platform;
-      el.platform.value = platform;
-      el.tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.platform === platform));
-      render();
-    }
-
-    function handleDelete(id) {
-      if (confirm('Deseja excluir este jogo do catálogo?')) {
-        removeGame(id);
-        setStatus('Jogo removido.');
-      }
-    }
-
-    window.editGame = editGame;
-    window.handleDelete = handleDelete;
-
-    el.fetchBtn.addEventListener('click', fetchGameData);
-    el.saveBtn.addEventListener('click', saveCurrentGame);
-    el.clearBtn.addEventListener('click', () => { resetForm(true); setStatus('Formulário limpo.'); });
-    el.searchInput.addEventListener('input', render);
-    el.filterCategory.addEventListener('change', render);
-    el.sortSelect.addEventListener('change', render);
-    el.exportBtn.addEventListener('click', exportBackup);
-    el.importInput.addEventListener('change', (e) => {
-      const file = e.target.files?.[0];
-      if (file) importBackup(file);
-      e.target.value = '';
-    });
-    el.saveApiBtn.addEventListener('click', saveApiKey);
-    el.removeApiBtn.addEventListener('click', removeApiKey);
-    el.tabs.forEach(tab => tab.addEventListener('click', () => setPlatform(tab.dataset.platform)));
-
-    el.apiKey.value = getApiKey();
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', async () => {
-        try { await navigator.serviceWorker.register('./sw.js'); }
-        catch (e) { console.warn('SW error', e); }
-      });
-    }
-
-    render();
-  </script>
+  clearForm();
+  render();
+})();
+</script>
 </body>
 </html>

@@ -1,11 +1,9 @@
-const CACHE_NAME = 'retro-games-pwa-v1';
+const CACHE_NAME = 'alcantara-games-v1';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/icon-maskable-512.png'
+  './sw.js'
 ];
 
 self.addEventListener('install', event => {
@@ -23,17 +21,11 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const req = event.request;
   if (req.method !== 'GET') return;
-
   event.respondWith(
-    caches.match(req).then(cached => {
-      if (cached) return cached;
-      return fetch(req).then(response => {
-        const copy = response.clone();
-        if (req.url.startsWith(self.location.origin)) {
-          caches.open(CACHE_NAME).then(cache => cache.put(req, copy));
-        }
-        return response;
-      }).catch(() => caches.match('./index.html'));
-    })
+    caches.match(req).then(cached => cached || fetch(req).then(res => {
+      const copy = res.clone();
+      caches.open(CACHE_NAME).then(cache => cache.put(req, copy)).catch(() => {});
+      return res;
+    }).catch(() => caches.match('./index.html')))
   );
 });
