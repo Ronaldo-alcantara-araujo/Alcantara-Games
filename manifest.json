@@ -4,8 +4,8 @@
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#050505",
-  "theme_color": "#0a0a0a",
-  "description": "Catálogo premium de jogos com visual preto e dourado.",
+  "theme_color": "#050505",
+  "description": "Catálogo pessoal de jogos Alcantara Games.",
   "icons": [
     {
       "src": "icon-192.png",
