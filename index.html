@@ -3,823 +3,326 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0b0b" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
   <title>Alcantara Games</title>
+  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="description" content="Catálogo premium de jogos retrô e modernos" />
   <link rel="manifest" href="manifest.json" />
   <style>
-    :root {
-      --bg: #050505;
-      --panel: #101010;
-      --panel-2: #161616;
-      --gold: #d4af37;
-      --gold-2: #f1d26b;
-      --text: #f5f1df;
-      --muted: #a49b7a;
-      --line: rgba(212, 175, 55, 0.18);
-      --danger: #ad3131;
-      --success: #2f8a53;
-      --shadow: 0 12px 30px rgba(0,0,0,.35);
-      --radius: 18px;
+    :root{
+      --bg:#050505; --panel:#101010; --panel2:#151515; --gold:#d4af37; --gold2:#f4d77b;
+      --text:#f5f5f5; --muted:#b6b6b6; --danger:#b43b3b; --shadow:0 10px 30px rgba(0,0,0,.35);
+      --radius:18px;
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, Arial, sans-serif;
-      background:
-        radial-gradient(circle at top, rgba(212,175,55,0.12), transparent 28%),
-        linear-gradient(180deg, #060606 0%, #0a0a0a 100%);
-      color: var(--text);
-      min-height: 100vh;
-    }
-    .app {
-      max-width: 1220px;
-      margin: 0 auto;
-      padding: 18px 14px 90px;
-    }
-    .hero {
-      background: linear-gradient(135deg, rgba(212,175,55,0.12), rgba(255,255,255,0.01));
-      border: 1px solid var(--line);
-      border-radius: 26px;
-      padding: 22px;
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-    .hero::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -35%;
-      width: 32%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(241,210,107,.12), transparent);
-      animation: shine 4.5s linear infinite;
-    }
-    @keyframes shine { to { left: 120%; } }
-    .brand {
-      display: grid;
-      grid-template-columns: minmax(130px, 240px) 1fr;
-      align-items: center;
-      gap: 18px;
-      margin-bottom: 14px;
-    }
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .brand-logo {
-      width: 100%;
-      max-width: 220px;
-      filter: drop-shadow(0 10px 24px rgba(0,0,0,.45)) drop-shadow(0 0 20px rgba(212,175,55,.12));
-    }
-    .title {
-      font-size: 1.7rem;
-      font-weight: 900;
-      color: var(--gold-2);
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
-    }
-    .subtitle { color: var(--muted); font-size: .95rem; }
-    .grid {
-      display: grid;
-      grid-template-columns: 380px 1fr;
-      gap: 16px;
-      align-items: start;
-    }
-    .card {
-      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 16px;
-      box-shadow: var(--shadow);
-    }
-    .section-title {
-      font-size: .86rem;
-      font-weight: 800;
-      letter-spacing: 1.4px;
-      color: var(--gold);
-      margin: 0 0 14px;
-      text-transform: uppercase;
-    }
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .form-grid .full { grid-column: 1 / -1; }
-    label {
-      display: block;
-      font-size: .78rem;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 12px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(212,175,55,.12);
-      background: #0d0d0d;
-      color: var(--text);
-      outline: none;
-    }
-    input:focus, select:focus, textarea:focus {
-      border-color: rgba(212,175,55,.4);
-      box-shadow: 0 0 0 3px rgba(212,175,55,.08);
-    }
-    textarea { resize: vertical; min-height: 90px; }
-    .btn-row, .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .btn {
-      border: none;
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: .2s ease;
-    }
-    .btn:active { transform: scale(.98); }
-    .btn-primary {
-      color: #151515;
-      background: linear-gradient(180deg, var(--gold-2), var(--gold));
-    }
-    .btn-secondary {
-      color: var(--text);
-      background: #171717;
-      border: 1px solid var(--line);
-    }
-    .btn-danger {
-      color: #fff;
-      background: linear-gradient(180deg, #bf3e3e, #922727);
-    }
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-top: 14px;
-    }
-    .stat {
-      background: rgba(255,255,255,.02);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 14px;
-    }
-    .stat strong {
-      display: block;
-      font-size: 1.3rem;
-      color: var(--gold-2);
-      margin-top: 5px;
-    }
-    .filters {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-    .games-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 14px;
-    }
-    .game-card {
-      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-    }
-    .cover {
-      width: 100%;
-      aspect-ratio: 3 / 4;
-      background: linear-gradient(135deg, rgba(212,175,55,.18), rgba(255,255,255,.02));
-      object-fit: cover;
-    }
-    .fallback-cover {
-      display: grid;
-      place-items: center;
-      color: var(--gold-2);
-      font-weight: 800;
-      letter-spacing: 1px;
-      padding: 18px;
-      text-align: center;
-      font-size: 1rem;
-    }
-    .game-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
-    .game-title { font-weight: 800; line-height: 1.2; }
-    .meta { color: var(--muted); font-size: .82rem; line-height: 1.3; }
-    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-    .chip {
-      font-size: .72rem;
-      padding: 6px 9px;
-      border-radius: 999px;
-      background: rgba(212,175,55,.08);
-      border: 1px solid rgba(212,175,55,.16);
-      color: var(--gold-2);
-    }
-    .chip.status-jogando { color: #9dd0ff; border-color: rgba(157,208,255,.25); background: rgba(157,208,255,.08); }
-    .chip.status-zerado { color: #9ef0bc; border-color: rgba(158,240,188,.25); background: rgba(158,240,188,.08); }
-    .chip.status-backlog { color: #ffd58e; border-color: rgba(255,213,142,.25); background: rgba(255,213,142,.08); }
-    .actions { display: flex; gap: 8px; margin-top: auto; }
-    .actions .btn { flex: 1; padding: 10px 8px; font-size: .82rem; }
-    .empty {
-      text-align: center;
-      color: var(--muted);
-      padding: 40px 18px;
-      border: 1px dashed rgba(212,175,55,.18);
-      border-radius: 16px;
-      background: rgba(255,255,255,.015);
-    }
-    .footer-note { margin-top: 12px; color: var(--muted); font-size: .84rem; }
-    .install-banner {
-      position: sticky;
-      bottom: 10px;
-      z-index: 20;
-      margin-top: 18px;
-      display: none;
-    }
-    .install-inner {
-      background: linear-gradient(180deg, #171717, #0e0e0e);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      box-shadow: var(--shadow);
-    }
-    
-    .install-tip {
-      margin-top: 10px;
-      font-size: .85rem;
-      color: var(--muted);
-    }
-    .splash {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      background:
-        radial-gradient(circle at top, rgba(212,175,55,0.12), transparent 28%),
-        linear-gradient(180deg, #040404 0%, #090909 100%);
-      display: grid;
-      place-items: center;
-      transition: opacity .35s ease, visibility .35s ease;
-    }
-    .splash.hidden { opacity: 0; visibility: hidden; }
-    .splash-box {
-      text-align: center;
-      padding: 24px;
-    }
-    .splash-logo {
-      width: min(340px, 78vw);
-      animation: floatIn 1.1s ease both;
-      filter: drop-shadow(0 12px 28px rgba(0,0,0,.5)) drop-shadow(0 0 24px rgba(212,175,55,.14));
-    }
-    .splash-text {
-      margin-top: 14px;
-      font-weight: 800;
-      letter-spacing: 3px;
-      color: var(--gold-2);
-      text-transform: uppercase;
-      animation: pulseGold 1.8s ease-in-out infinite;
-    }
-    @keyframes floatIn {
-      from { opacity: 0; transform: translateY(18px) scale(.94); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    @keyframes pulseGold {
-      0%,100% { opacity: .72; }
-      50% { opacity: 1; }
-    }
-
-    @media (max-width: 980px) {
-      .grid { grid-template-columns: 1fr; }
-      .stats { grid-template-columns: repeat(2, 1fr); }
-      .filters { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 640px) {
-      .app { padding: 12px 10px 90px; }
-      .form-grid, .filters { grid-template-columns: 1fr; }
-      .stats { grid-template-columns: 1fr 1fr; }
-      .title { font-size: 1.15rem; }
-      .brand { grid-template-columns: 1fr; text-align: center; }
-      .brand-logo { max-width: 250px; }
-    }
+    *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+    body{padding-bottom:100px} button,input,select,textarea{font:inherit}
+    .hidden{display:none !important}
+    .splash{position:fixed; inset:0; background:radial-gradient(circle at top, rgba(212,175,55,.18), transparent 30%),linear-gradient(180deg,#000,#050505 70%);display:flex; flex-direction:column; align-items:center; justify-content:center;z-index:9999; transition:opacity .45s ease, visibility .45s ease;}
+    .splash.hide{opacity:0; visibility:hidden}
+    .logo-wrap{width:170px; height:170px; border-radius:32px; display:grid; place-items:center; background:linear-gradient(135deg,#181818,#090909); border:1px solid rgba(212,175,55,.25); box-shadow:0 0 0 1px rgba(255,255,255,.03) inset, 0 0 40px rgba(212,175,55,.14);}
+    .logo-wrap img{width:86%; height:86%; object-fit:contain}
+    .brand{margin-top:18px; font-size:30px; font-weight:800; color:var(--gold2); text-shadow:0 0 18px rgba(212,175,55,.22);}
+    .sub{margin-top:8px; color:var(--muted); font-size:13px; letter-spacing:2px}
+    .app{max-width:1100px; margin:0 auto; padding:16px;}
+    .hero{position:sticky; top:0; z-index:20; backdrop-filter: blur(10px); background:linear-gradient(180deg, rgba(5,5,5,.95), rgba(5,5,5,.78)); border-bottom:1px solid rgba(255,255,255,.04); margin:-16px -16px 16px; padding:16px;}
+    .hero-top{display:flex; align-items:center; gap:14px;}
+    .hero-logo{width:66px; height:66px; border-radius:18px; background:#111; padding:8px; border:1px solid rgba(212,175,55,.18); box-shadow:var(--shadow); display:grid; place-items:center;}
+    .hero-logo img{width:100%; height:100%; object-fit:contain}
+    .hero h1{margin:0; font-size:26px; color:var(--gold2)} .hero p{margin:4px 0 0; color:var(--muted); font-size:13px}
+    .hero-actions,.toolbar,.chips,.actions,.footerinner{display:flex; gap:10px; flex-wrap:wrap}
+    .btn{border:none; border-radius:14px; padding:12px 14px; cursor:pointer; transition:transform .16s ease; box-shadow:var(--shadow);}
+    .btn:active{transform:scale(.98)}
+    .btn-primary{background:linear-gradient(135deg,var(--gold),#a87e13); color:#111; font-weight:800;}
+    .btn-secondary{background:#151515; color:var(--text); border:1px solid rgba(255,255,255,.08);}
+    .grid{display:grid; grid-template-columns:repeat(12,1fr); gap:14px}
+    .card{grid-column:span 12; background:linear-gradient(180deg,var(--panel2),var(--panel)); border:1px solid rgba(255,255,255,.05); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow);}
+    .card h2{margin:0 0 10px; color:var(--gold2); font-size:17px}
+    .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:10px}
+    .stat{background:#0c0c0c; border:1px solid rgba(255,255,255,.05); border-radius:16px; padding:12px;}
+    .stat .n{font-size:26px; font-weight:800; color:var(--gold2)} .stat .l{font-size:12px; color:var(--muted); margin-top:4px}
+    .form-grid{display:grid; grid-template-columns:repeat(12,1fr); gap:10px}
+    .field{grid-column:span 12} .field.half{grid-column:span 6} .field.third{grid-column:span 4}
+    label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px}
+    input,select,textarea{width:100%; background:#090909; color:var(--text); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:12px}
+    textarea{min-height:100px; resize:vertical}
+    .search{flex:1; min-width:180px}
+    .chip{border:none; background:#121212; color:#ddd; border-radius:999px; padding:10px 12px; border:1px solid rgba(255,255,255,.08); cursor:pointer}
+    .chip.active{background:rgba(212,175,55,.15); color:var(--gold2); border-color:rgba(212,175,55,.35)}
+    .shelves{display:grid; gap:18px}
+    .shelf-title{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px}
+    .shelf-title h3{margin:0; color:var(--gold2)} .shelf-title span{font-size:12px; color:var(--muted)}
+    .row{display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:12px}
+    .game{background:#0c0c0c; border:1px solid rgba(255,255,255,.05); border-radius:18px; overflow:hidden; transition:transform .16s ease; position:relative}
+    .game:hover{transform:translateY(-2px)}
+    .cover{aspect-ratio:3/4; background:linear-gradient(180deg, rgba(212,175,55,.12), rgba(0,0,0,.08)),radial-gradient(circle at top right, rgba(212,175,55,.18), transparent 34%),#111; display:flex; align-items:flex-end; padding:12px; position:relative}
+    .cover::before{content:""; position:absolute; inset:0; background:linear-gradient(180deg, transparent 30%, rgba(0,0,0,.75) 100%)}
+    .platform-badge,.status-badge,.media-badge,.fav-badge{position:absolute; z-index:2; padding:5px 8px; border-radius:999px; font-size:11px; font-weight:700; backdrop-filter:blur(8px)}
+    .platform-badge{top:10px; left:10px; background:rgba(0,0,0,.6); border:1px solid rgba(255,255,255,.08)}
+    .status-badge{top:10px; right:10px; background:rgba(212,175,55,.18); color:var(--gold2); border:1px solid rgba(212,175,55,.25)}
+    .media-badge{bottom:10px; left:10px; background:rgba(255,255,255,.08)}
+    .fav-badge{bottom:10px; right:10px; background:rgba(212,175,55,.18)}
+    .cover-title{z-index:1; position:relative; font-weight:800; font-size:18px; line-height:1.05; text-shadow:0 2px 10px rgba(0,0,0,.55); display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden}
+    .game-body{padding:12px} .meta{display:flex; justify-content:space-between; gap:10px; color:var(--muted); font-size:12px; margin-bottom:8px}
+    .category{display:inline-block; font-size:11px; color:#111; background:var(--gold2); padding:5px 8px; border-radius:999px; font-weight:800}
+    .synopsis{margin-top:8px; font-size:12px; color:#d3d3d3; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; min-height:46px}
+    .mini{flex:1; background:#171717; color:#fff; border:1px solid rgba(255,255,255,.06); border-radius:12px; padding:10px; cursor:pointer}
+    .mini.danger{background:rgba(180,59,59,.12); color:#ffb3b3; border-color:rgba(180,59,59,.28)}
+    .empty{text-align:center; color:var(--muted); padding:30px 10px; border:1px dashed rgba(255,255,255,.08); border-radius:18px}
+    dialog{width:min(760px, calc(100% - 24px)); border:none; padding:0; background:#0b0b0b; color:var(--text); border-radius:24px; box-shadow:0 20px 60px rgba(0,0,0,.55)}
+    dialog::backdrop{background:rgba(0,0,0,.72); backdrop-filter: blur(3px)}
+    .modal-head{padding:16px; border-bottom:1px solid rgba(255,255,255,.05); display:flex; justify-content:space-between; gap:10px; align-items:flex-start}
+    .modal-body{padding:16px}
+    .modal-grid{display:grid; grid-template-columns:220px 1fr; gap:16px}
+    .cover-large{aspect-ratio:3/4; border-radius:20px; background:linear-gradient(180deg, rgba(212,175,55,.12), rgba(0,0,0,.08)), #121212; padding:14px; display:flex; align-items:flex-end; font-weight:800; font-size:28px}
+    .kv{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:12px}
+    .kv .item{background:#121212; border:1px solid rgba(255,255,255,.05); padding:10px; border-radius:14px}
+    .kv .k{font-size:11px; color:var(--muted); margin-bottom:4px} .kv .v{font-weight:700}
+    .footerbar{position:fixed; left:0; right:0; bottom:0; background:linear-gradient(180deg, rgba(5,5,5,.82), rgba(5,5,5,.96)); backdrop-filter:blur(10px); border-top:1px solid rgba(255,255,255,.05); padding:12px 16px; display:flex; justify-content:center; z-index:30}
+    .footerinner{width:min(1100px,100%)}
+    @media (min-width: 860px){ .col-4{grid-column:span 4}.col-8{grid-column:span 8}.col-12{grid-column:span 12} }
+    @media (max-width: 760px){ .stats{grid-template-columns:repeat(2,1fr)} .field.half,.field.third{grid-column:span 12} .modal-grid{grid-template-columns:1fr} .cover-large{aspect-ratio:16/9} }
   </style>
 </head>
 <body>
-  <div class="splash" id="splashScreen">
-    <div class="splash-box">
-      <img class="splash-logo" src="logo.png" alt="Alcantara Games" />
-      <div class="splash-text">Alcantara Games</div>
-    </div>
+  <div class="splash" id="splash">
+    <div class="logo-wrap"><img src="icon-512.png" alt="Alcantara Games" /></div>
+    <div class="brand">Alcantara Games</div>
+    <div class="sub">ULTRA MASTER FINAL</div>
   </div>
+
   <div class="app">
-    <section class="hero">
-      <div class="brand">
-        <div class="logo-wrap">
-          <img class="brand-logo" src="logo.png" alt="Logo Alcantara Games" />
-        </div>
+    <div class="hero">
+      <div class="hero-top">
+        <div class="hero-logo"><img src="icon-512.png" alt="Logo" /></div>
         <div>
-          <div class="title">Alcantara Games</div>
-          <div class="subtitle">Catálogo premium PWA para sua coleção retrô e expansão futura</div>
-          <div class="install-tip">Instale no celular pelo menu do navegador para usar com ícone próprio e abertura em tela cheia.</div>
+          <h1>Alcantara Games</h1>
+          <p>Catálogo premium PWA para PS2, Xbox 360, PS3, PC e outras plataformas.</p>
         </div>
       </div>
-      <div class="stats">
-        <div class="stat"><span>Total</span><strong id="statTotal">0</strong></div>
-        <div class="stat"><span>Favoritos</span><strong id="statFav">0</strong></div>
-        <div class="stat"><span>Zerados</span><strong id="statDone">0</strong></div>
-        <div class="stat"><span>Plataformas</span><strong id="statPlatforms">0</strong></div>
+      <div class="hero-actions" style="margin-top:14px">
+        <button class="btn btn-primary" id="btnScrollForm">+ Novo jogo</button>
+        <button class="btn btn-secondary" id="btnExport">Backup JSON</button>
+        <button class="btn btn-secondary" id="btnImport">Restaurar</button>
+        <input id="importFile" type="file" accept=".json,application/json" class="hidden" />
       </div>
-    </section>
+    </div>
 
     <div class="grid">
-      <section class="card">
-        <h2 class="section-title">Cadastro tático</h2>
-        <form id="gameForm">
-          <input type="hidden" id="gameId" />
-          <div class="form-grid">
-            <div class="full">
-              <label for="title">Título do jogo</label>
-              <input id="title" required placeholder="Ex.: God of War II" />
-            </div>
-            <div>
-              <label for="platform">Plataforma</label>
-              <select id="platform">
-                <option>PS2</option>
-                <option>Xbox 360</option>
-                <option>PS3</option>
-                <option>PC</option>
-                <option>Outros</option>
-              </select>
-            </div>
-            <div>
-              <label for="category">Categoria</label>
-              <input id="category" placeholder="Ex.: Ação, Terror, Corrida" />
-            </div>
-            <div>
-              <label for="status">Status</label>
-              <select id="status">
-                <option value="backlog">Backlog</option>
-                <option value="jogando">Jogando</option>
-                <option value="zerado">Zerado</option>
-              </select>
-            </div>
-            <div>
-              <label for="mediaType">Mídia</label>
-              <select id="mediaType">
-                <option value="fisica">Física</option>
-                <option value="digital">Digital</option>
-              </select>
-            </div>
-            <div>
-              <label for="year">Ano</label>
-              <input id="year" placeholder="Ex.: 2005" />
-            </div>
-            <div>
-              <label for="genre">Gênero</label>
-              <input id="genre" placeholder="Ex.: Hack and Slash" />
-            </div>
-            <div>
-              <label for="rating">Nota geral</label>
-              <input id="rating" type="number" min="0" max="10" step="0.1" placeholder="0 a 10" />
-            </div>
-            <div class="full">
-              <label for="coverUrl">URL da capa</label>
-              <input id="coverUrl" placeholder="Pode deixar em branco e usar busca inteligente" />
-            </div>
-            <div class="full">
-              <label for="summary">Sinopse</label>
-              <textarea id="summary" placeholder="Resumo do jogo"></textarea>
-            </div>
-            <div class="full toolbar">
-              <button type="button" class="btn btn-secondary" id="autoFillBtn">Busca inteligente</button>
-              <button type="button" class="btn btn-secondary" id="favoriteBtn">Favorito: Não</button>
-              <button type="submit" class="btn btn-primary" id="saveBtn">Salvar jogo</button>
-              <button type="button" class="btn btn-danger" id="clearBtn">Limpar</button>
+      <section class="card col-4">
+        <h2>Painel tático</h2>
+        <div class="stats">
+          <div class="stat"><div class="n" id="statTotal">0</div><div class="l">Total</div></div>
+          <div class="stat"><div class="n" id="statJogando">0</div><div class="l">Jogando</div></div>
+          <div class="stat"><div class="n" id="statZerado">0</div><div class="l">Zerados</div></div>
+          <div class="stat"><div class="n" id="statFav">0</div><div class="l">Favoritos</div></div>
+        </div>
+      </section>
+
+      <section class="card col-8" id="formCard">
+        <h2 id="formTitle">Cadastrar jogo</h2>
+        <div class="form-grid">
+          <div class="field half"><label for="title">Título</label><input id="title" placeholder="Ex.: God of War II" /></div>
+          <div class="field half"><label for="platform">Plataforma</label><select id="platform"><option>PS2</option><option>Xbox 360</option><option>PS3</option><option>PC</option><option>Outros</option></select></div>
+          <div class="field third"><label for="category">Categoria</label><select id="category"><option>Ação</option><option>Aventura</option><option>Corrida</option><option>Esporte</option><option>FPS</option><option>Luta</option><option>RPG</option><option>Survival Horror</option><option>Estratégia</option><option>Outro</option></select></div>
+          <div class="field third"><label for="status">Status</label><select id="status"><option>Backlog</option><option>Jogando</option><option>Zerado</option></select></div>
+          <div class="field third"><label for="media">Mídia</label><select id="media"><option>Física</option><option>Digital</option></select></div>
+          <div class="field half"><label for="year">Ano</label><input id="year" placeholder="Ex.: 2005" /></div>
+          <div class="field half"><label for="notes">Observações</label><input id="notes" placeholder="Ex.: Completo / Edição especial / Sem manual" /></div>
+          <div class="field"><label for="synopsis">Sinopse</label><textarea id="synopsis" placeholder="Digite a sinopse do jogo..."></textarea></div>
+          <div class="field">
+            <div class="toolbar">
+              <button class="btn btn-primary" id="saveBtn" type="button">Salvar jogo</button>
+              <button class="btn btn-secondary hidden" id="cancelEdit" type="button">Cancelar edição</button>
             </div>
           </div>
-        </form>
-        <div class="footer-note">Sem API. O app tenta preencher usando banco interno offline e capa automática por URL sugestiva. Quando você completar um jogo manualmente, ele passa a reaproveitar os dados nas próximas buscas.</div>
+        </div>
       </section>
 
-      <section class="card">
-        <h2 class="section-title">Acervo operacional</h2>
-        <div class="filters">
-          <input id="searchInput" placeholder="Buscar por título, gênero ou sinopse" />
-          <select id="filterPlatform">
-            <option value="">Todas plataformas</option>
-            <option>PS2</option>
-            <option>Xbox 360</option>
-            <option>PS3</option>
-            <option>PC</option>
-            <option>Outros</option>
-          </select>
-          <select id="filterStatus">
-            <option value="">Todos status</option>
-            <option value="backlog">Backlog</option>
-            <option value="jogando">Jogando</option>
-            <option value="zerado">Zerado</option>
-          </select>
-          <select id="filterMedia">
-            <option value="">Todas mídias</option>
-            <option value="fisica">Física</option>
-            <option value="digital">Digital</option>
-          </select>
-          <select id="sortBy">
-            <option value="recent">Mais recentes</option>
-            <option value="az">A-Z</option>
-            <option value="rating">Melhor nota</option>
-          </select>
+      <section class="card col-12">
+        <h2>Busca e filtros</h2>
+        <div class="toolbar">
+          <input class="search" id="search" placeholder="Buscar por título, plataforma, categoria ou sinopse..." />
+          <select id="filterPlatform"><option value="Todos">Todas plataformas</option><option>PS2</option><option>Xbox 360</option><option>PS3</option><option>PC</option><option>Outros</option></select>
+          <select id="filterStatus"><option value="Todos">Todos status</option><option>Backlog</option><option>Jogando</option><option>Zerado</option></select>
+          <select id="filterMedia"><option value="Todos">Toda mídia</option><option>Física</option><option>Digital</option></select>
+          <select id="sortBy"><option value="recent">Mais recentes</option><option value="az">A-Z</option><option value="platform">Plataforma</option><option value="favorites">Favoritos primeiro</option></select>
         </div>
-        <div class="toolbar" style="margin-bottom:14px;">
-          <button class="btn btn-secondary" id="exportBtn">Backup JSON</button>
-          <label class="btn btn-secondary" for="importFile" style="display:inline-flex; align-items:center;">Restaurar JSON</label>
-          <input id="importFile" type="file" accept="application/json" hidden />
+        <div class="chips" style="margin-top:10px">
+          <button class="chip active" data-quick="Todos">Todos</button>
+          <button class="chip" data-quick="Favoritos">Favoritos</button>
+          <button class="chip" data-quick="Jogando">Jogando</button>
+          <button class="chip" data-quick="Zerado">Zerados</button>
+          <button class="chip" data-quick="Backlog">Backlog</button>
         </div>
-        <div id="gamesContainer" class="games-grid"></div>
       </section>
-    </div>
 
-    <div id="installBanner" class="install-banner">
-      <div class="install-inner">
-        <div>
-          <strong style="color:var(--gold-2)">Instalar Alcantara Games</strong>
-          <div style="color:var(--muted); font-size:.9rem;">Abra como app no Android com acesso rápido pela tela inicial.</div>
-        </div>
-        <button id="installBtn" class="btn btn-primary">Instalar</button>
-      </div>
+      <section class="card col-12"><div class="shelves" id="library"></div></section>
     </div>
   </div>
 
-<script>
-(() => {
-  const STORAGE_KEY = 'alcantara_games_catalog_v1';
-  window.addEventListener('load', () => {
-    const splash = document.getElementById('splashScreen');
-    setTimeout(() => splash?.classList.add('hidden'), 900);
-  });
-  const favoriteBtn = document.getElementById('favoriteBtn');
-  let favoriteValue = false;
-  let deferredPrompt = null;
+  <div class="footerbar"><div class="footerinner"><button class="btn btn-primary" id="footerAdd">+ Novo jogo</button><button class="btn btn-secondary" id="footerBackup">Backup</button><button class="btn btn-secondary" id="footerRestore">Restaurar</button></div></div>
 
-  const fallbackDb = {
-    'god of war ii': {
-      platform: 'PS2', category: 'Ação', genre: 'Hack and Slash', year: '2007', rating: '9.3',
-      summary: 'Kratos enfrenta os deuses do Olimpo em uma campanha intensa com combates brutais, quebra-cabeças e chefes épicos.'
-    },
-    'gta san andreas': {
-      platform: 'PS2', category: 'Mundo Aberto', genre: 'Ação / Aventura', year: '2004', rating: '9.5',
-      summary: 'CJ retorna para Los Santos e se envolve em guerras de gangues, missões variadas e exploração de um enorme mapa aberto.'
-    },
-    'resident evil 4': {
-      platform: 'PS2', category: 'Terror', genre: 'Survival Horror', year: '2005', rating: '9.4',
-      summary: 'Leon S. Kennedy parte em uma missão de resgate em uma vila isolada dominada por uma ameaça biológica violenta.'
-    },
-    'shadow of the colossus': {
-      platform: 'PS2', category: 'Aventura', genre: 'Ação / Puzzle', year: '2005', rating: '9.2',
-      summary: 'Um guerreiro percorre terras proibidas para derrotar colossos gigantes em busca de ressuscitar uma jovem.'
-    },
-    'black': {
-      platform: 'PS2', category: 'Tiro', genre: 'FPS', year: '2006', rating: '8.7',
-      summary: 'FPS cinematográfico focado em destruição, impacto sonoro forte e tiroteios intensos em ritmo acelerado.'
-    },
-    'halo 3': {
-      platform: 'Xbox 360', category: 'Tiro', genre: 'FPS', year: '2007', rating: '9.1',
-      summary: 'Master Chief retorna para encerrar a trilogia em batalhas épicas com campanha marcante e multiplayer lendário.'
-    },
-    'gears of war 3': {
-      platform: 'Xbox 360', category: 'Ação', genre: 'TPS', year: '2011', rating: '8.9',
-      summary: 'Conflito total entre a humanidade e a ameaça Locust em um jogo de tiro tático com cooperação intensa.'
-    },
-    'forza horizon': {
-      platform: 'Xbox 360', category: 'Corrida', genre: 'Racing', year: '2012', rating: '8.8',
-      summary: 'Corrida em mundo aberto com grande variedade de carros, eventos e exploração em clima de festival automotivo.'
-    },
-    'red dead redemption': {
-      platform: 'Xbox 360', category: 'Mundo Aberto', genre: 'Ação / Aventura', year: '2010', rating: '9.6',
-      summary: 'John Marston cruza o velho oeste em uma jornada dramática por redenção, vingança e sobrevivência.'
-    },
-    'metal gear solid 3': {
-      platform: 'PS2', category: 'Stealth', genre: 'Ação / Espionagem', year: '2004', rating: '9.4',
-      summary: 'Naked Snake enfrenta uma missão histórica na selva soviética em um clássico da espionagem tática.'
-    }
-  };
-
-  const els = {
-    form: document.getElementById('gameForm'),
-    gameId: document.getElementById('gameId'),
-    title: document.getElementById('title'),
-    platform: document.getElementById('platform'),
-    category: document.getElementById('category'),
-    status: document.getElementById('status'),
-    mediaType: document.getElementById('mediaType'),
-    year: document.getElementById('year'),
-    genre: document.getElementById('genre'),
-    rating: document.getElementById('rating'),
-    coverUrl: document.getElementById('coverUrl'),
-    summary: document.getElementById('summary'),
-    saveBtn: document.getElementById('saveBtn'),
-    clearBtn: document.getElementById('clearBtn'),
-    autoFillBtn: document.getElementById('autoFillBtn'),
-    searchInput: document.getElementById('searchInput'),
-    filterPlatform: document.getElementById('filterPlatform'),
-    filterStatus: document.getElementById('filterStatus'),
-    filterMedia: document.getElementById('filterMedia'),
-    sortBy: document.getElementById('sortBy'),
-    gamesContainer: document.getElementById('gamesContainer'),
-    exportBtn: document.getElementById('exportBtn'),
-    importFile: document.getElementById('importFile'),
-    statTotal: document.getElementById('statTotal'),
-    statFav: document.getElementById('statFav'),
-    statDone: document.getElementById('statDone'),
-    statPlatforms: document.getElementById('statPlatforms'),
-    installBanner: document.getElementById('installBanner'),
-    installBtn: document.getElementById('installBtn'),
-  };
-
-  function loadGames() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-    catch { return []; }
-  }
-
-  function saveGames(games) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(games));
-  }
-
-  function slugify(value='') {
-    return value.toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
-  }
-
-  function safeCoverUrl(title) {
-    const key = slugify(title).replace(/[^a-z0-9]+/g, '-');
-    return `https://images.igdb.com/igdb/image/upload/t_cover_big/${key}.jpg`;
-  }
-
-  function getGames() { return loadGames(); }
-
-  function setFavorite(active) {
-    favoriteValue = !!active;
-    favoriteBtn.textContent = `Favorito: ${favoriteValue ? 'Sim' : 'Não'}`;
-    favoriteBtn.className = favoriteValue ? 'btn btn-primary' : 'btn btn-secondary';
-  }
-
-  function clearForm() {
-    els.form.reset();
-    els.gameId.value = '';
-    els.platform.value = 'PS2';
-    els.status.value = 'backlog';
-    els.mediaType.value = 'fisica';
-    setFavorite(false);
-    els.saveBtn.textContent = 'Salvar jogo';
-  }
-
-  function storeLearnedData(game) {
-    const key = slugify(game.title);
-    if (!key) return;
-    fallbackDb[key] = {
-      platform: game.platform,
-      category: game.category,
-      genre: game.genre,
-      year: game.year,
-      rating: game.rating,
-      summary: game.summary
-    };
-  }
-
-  function smartFill(title) {
-    const key = slugify(title);
-    const found = fallbackDb[key];
-    if (found) {
-      if (!els.platform.value || els.platform.value === 'Outros') els.platform.value = found.platform || 'Outros';
-      if (!els.category.value) els.category.value = found.category || '';
-      if (!els.genre.value) els.genre.value = found.genre || '';
-      if (!els.year.value) els.year.value = found.year || '';
-      if (!els.rating.value) els.rating.value = found.rating || '';
-      if (!els.summary.value) els.summary.value = found.summary || '';
-    }
-    if (!els.coverUrl.value && title.trim()) {
-      els.coverUrl.value = safeCoverUrl(title.trim());
-    }
-  }
-
-  function upsertGame(game) {
-    const games = getGames();
-    if (game.id) {
-      const idx = games.findIndex(g => g.id === game.id);
-      if (idx >= 0) games[idx] = game;
-    } else {
-      game.id = crypto.randomUUID ? crypto.randomUUID() : String(Date.now());
-      games.unshift(game);
-    }
-    saveGames(games);
-    storeLearnedData(game);
-    render();
-    clearForm();
-  }
-
-  function removeGame(id) {
-    const games = getGames().filter(g => g.id !== id);
-    saveGames(games);
-    render();
-  }
-
-  function editGame(id) {
-    const game = getGames().find(g => g.id === id);
-    if (!game) return;
-    els.gameId.value = game.id;
-    els.title.value = game.title || '';
-    els.platform.value = game.platform || 'PS2';
-    els.category.value = game.category || '';
-    els.status.value = game.status || 'backlog';
-    els.mediaType.value = game.mediaType || 'fisica';
-    els.year.value = game.year || '';
-    els.genre.value = game.genre || '';
-    els.rating.value = game.rating || '';
-    els.coverUrl.value = game.coverUrl || '';
-    els.summary.value = game.summary || '';
-    setFavorite(game.favorite);
-    els.saveBtn.textContent = 'Atualizar jogo';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function exportJson() {
-    const blob = new Blob([JSON.stringify(getGames(), null, 2)], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'alcantara-games-backup.json';
-    a.click();
-    URL.revokeObjectURL(a.href);
-  }
-
-  function importJson(file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const data = JSON.parse(reader.result);
-        if (!Array.isArray(data)) throw new Error('Formato inválido');
-        saveGames(data);
-        render();
-        alert('Backup restaurado com sucesso.');
-      } catch {
-        alert('Arquivo inválido para restauração.');
-      }
-    };
-    reader.readAsText(file);
-  }
-
-  function renderStats(games) {
-    els.statTotal.textContent = games.length;
-    els.statFav.textContent = games.filter(g => g.favorite).length;
-    els.statDone.textContent = games.filter(g => g.status === 'zerado').length;
-    els.statPlatforms.textContent = new Set(games.map(g => g.platform).filter(Boolean)).size;
-  }
-
-  function render() {
-    const games = getGames();
-    renderStats(games);
-
-    const q = slugify(els.searchInput.value);
-    const fp = els.filterPlatform.value;
-    const fs = els.filterStatus.value;
-    const fm = els.filterMedia.value;
-    const sortBy = els.sortBy.value;
-
-    let filtered = games.filter(g => {
-      const hay = slugify(`${g.title} ${g.genre} ${g.summary} ${g.category}`);
-      return (!q || hay.includes(q)) &&
-             (!fp || g.platform === fp) &&
-             (!fs || g.status === fs) &&
-             (!fm || g.mediaType === fm);
-    });
-
-    filtered.sort((a, b) => {
-      if (sortBy === 'az') return (a.title || '').localeCompare(b.title || '');
-      if (sortBy === 'rating') return (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0);
-      return (b.createdAt || 0) - (a.createdAt || 0);
-    });
-
-    if (!filtered.length) {
-      els.gamesContainer.innerHTML = `<div class="empty">Nenhum jogo encontrado. Cadastre o primeiro título e monte seu acervo.</div>`;
-      return;
-    }
-
-    els.gamesContainer.innerHTML = filtered.map(game => {
-      const cover = game.coverUrl
-        ? `<img class="cover" src="${game.coverUrl}" alt="${escapeHtml(game.title)}" onerror="this.outerHTML='<div class=\'cover fallback-cover\'>${escapeHtml(game.title)}</div>'">`
-        : `<div class="cover fallback-cover">${escapeHtml(game.title)}</div>`;
-      return `
-        <article class="game-card">
-          ${cover}
-          <div class="game-body">
-            <div class="game-title">${escapeHtml(game.title)}</div>
-            <div class="meta">${escapeHtml(game.platform || '')} • ${escapeHtml(game.year || 'Ano não informado')} • ${escapeHtml(game.genre || 'Gênero não informado')}</div>
-            <div class="chips">
-              <span class="chip">${escapeHtml(game.category || 'Sem categoria')}</span>
-              <span class="chip status-${escapeHtml(game.status || 'backlog')}">${labelStatus(game.status)}</span>
-              <span class="chip">${game.mediaType === 'digital' ? 'Digital' : 'Física'}</span>
-              ${game.favorite ? '<span class="chip">★ Favorito</span>' : ''}
-            </div>
-            <div class="meta">${escapeHtml((game.summary || 'Sem sinopse').slice(0, 120))}${(game.summary || '').length > 120 ? '...' : ''}</div>
-            <div class="actions">
-              <button class="btn btn-secondary" onclick="window.__editGame('${game.id}')">Editar</button>
-              <button class="btn btn-danger" onclick="window.__removeGame('${game.id}')">Excluir</button>
-            </div>
+  <dialog id="detailsModal">
+    <div class="modal-head">
+      <div><div style="font-size:12px;color:#b6b6b6;letter-spacing:1px">DETALHES DO JOGO</div><div id="modalTitle" style="font-size:24px;color:#f4d77b;font-weight:800;margin-top:4px"></div></div>
+      <button class="btn btn-secondary" id="closeModal">Fechar</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-grid">
+        <div class="cover-large" id="modalCover"></div>
+        <div>
+          <div class="kv">
+            <div class="item"><div class="k">Plataforma</div><div class="v" id="mPlatform"></div></div>
+            <div class="item"><div class="k">Categoria</div><div class="v" id="mCategory"></div></div>
+            <div class="item"><div class="k">Status</div><div class="v" id="mStatus"></div></div>
+            <div class="item"><div class="k">Mídia</div><div class="v" id="mMedia"></div></div>
+            <div class="item"><div class="k">Ano</div><div class="v" id="mYear"></div></div>
+            <div class="item"><div class="k">Favorito</div><div class="v" id="mFav"></div></div>
           </div>
-        </article>
-      `;
-    }).join('');
-  }
+          <div style="margin-bottom:10px;font-size:12px;color:#b6b6b6">Sinopse</div><div id="mSynopsis" style="line-height:1.55;color:#ebebeb"></div>
+          <div style="margin-top:16px;font-size:12px;color:#b6b6b6">Observações</div><div id="mNotes" style="margin-top:6px;line-height:1.45;color:#ebebeb"></div>
+        </div>
+      </div>
+    </div>
+  </dialog>
 
-  function labelStatus(status) {
-    return status === 'jogando' ? 'Jogando' : status === 'zerado' ? 'Zerado' : 'Backlog';
-  }
-
-  function escapeHtml(str='') {
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-  }
-
-  els.form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const game = {
-      id: els.gameId.value || undefined,
-      title: els.title.value.trim(),
-      platform: els.platform.value,
-      category: els.category.value.trim(),
-      status: els.status.value,
-      mediaType: els.mediaType.value,
-      year: els.year.value.trim(),
-      genre: els.genre.value.trim(),
-      rating: els.rating.value.trim(),
-      coverUrl: els.coverUrl.value.trim(),
-      summary: els.summary.value.trim(),
-      favorite: favoriteValue,
-      createdAt: els.gameId.value ? (getGames().find(g => g.id === els.gameId.value)?.createdAt || Date.now()) : Date.now(),
-    };
-    if (!game.title) return alert('Informe o título do jogo.');
-    if (!game.coverUrl) game.coverUrl = safeCoverUrl(game.title);
-    upsertGame(game);
-  });
-
-  els.clearBtn.addEventListener('click', clearForm);
-  favoriteBtn.addEventListener('click', () => setFavorite(!favoriteValue));
-  els.autoFillBtn.addEventListener('click', () => {
-    if (!els.title.value.trim()) return alert('Digite o título primeiro.');
-    smartFill(els.title.value.trim());
-  });
-
-  [els.searchInput, els.filterPlatform, els.filterStatus, els.filterMedia, els.sortBy]
-    .forEach(el => el.addEventListener('input', render));
-  [els.filterPlatform, els.filterStatus, els.filterMedia, els.sortBy]
-    .forEach(el => el.addEventListener('change', render));
-
-  els.exportBtn.addEventListener('click', exportJson);
-  els.importFile.addEventListener('change', (e) => {
-    if (e.target.files?.[0]) importJson(e.target.files[0]);
-    e.target.value = '';
-  });
-
-  window.__editGame = editGame;
-  window.__removeGame = (id) => {
-    if (confirm('Deseja excluir este jogo?')) removeGame(id);
+<script>
+const STORAGE_KEY = "alcantara_games_ultra_master_final";
+const DEFAULT_SYNOPSES = {
+  "god of war ii":"Kratos desafia os deuses do Olimpo em uma jornada brutal por vingança, com combates intensos, chefes gigantes e ação cinematográfica.",
+  "resident evil 4":"Leon S. Kennedy enfrenta uma seita perigosa em uma vila isolada enquanto tenta resgatar a filha do presidente em um survival horror clássico.",
+  "gta san andreas":"CJ retorna para San Andreas e reencontra uma guerra de gangues, corrupção e missões por todo o estado em um dos jogos mais icônicos da geração.",
+  "black":"FPS explosivo focado em destruição, tiroteios intensos e atmosfera cinematográfica.",
+  "forza motorsport 4":"Simulação de corrida com foco em carros, pistas e progressão competitiva no Xbox 360.",
+  "need for speed most wanted":"Corridas ilegais, perseguições policiais e progressão rumo ao topo da lista negra.",
+  "shadow of the colossus":"Uma aventura melancólica em um mundo vasto, centrada em batalhas épicas contra colossos gigantes.",
+  "metal gear solid 3":"Operação stealth na Guerra Fria com narrativa marcante, sobrevivência e espionagem tática."
+};
+const state = {games: [], editingId: null, quickFilter: "Todos"};
+const el = id => document.getElementById(id);
+const qsa = s => [...document.querySelectorAll(s)];
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,8); }
+function normalize(t=""){ return t.toString().trim().toLowerCase(); }
+function loadGames(){ try{ state.games = JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]"); }catch{ state.games=[]; } }
+function persist(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state.games)); }
+function autoSynopsis(title){ return DEFAULT_SYNOPSES[normalize(title)] || ""; }
+function getFormData(){
+  const title = el("title").value.trim();
+  const old = state.games.find(g => g.id === state.editingId) || {};
+  return {
+    id: state.editingId || uid(),
+    title, platform: el("platform").value, category: el("category").value, status: el("status").value, media: el("media").value,
+    year: el("year").value.trim(), notes: el("notes").value.trim(), synopsis: el("synopsis").value.trim() || autoSynopsis(title),
+    favorite: !!old.favorite, createdAt: old.createdAt || Date.now(), updatedAt: Date.now()
   };
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    els.installBanner.style.display = 'block';
-  });
-
-  els.installBtn.addEventListener('click', async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    deferredPrompt = null;
-    els.installBanner.style.display = 'none';
-  });
-
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
-  }
-
-  clearForm();
-  render();
-})();
+}
+function clearForm(){
+  state.editingId = null; el("formTitle").textContent = "Cadastrar jogo"; el("saveBtn").textContent = "Salvar jogo"; el("cancelEdit").classList.add("hidden");
+  ["title","year","notes","synopsis"].forEach(id => el(id).value="");
+  el("platform").value="PS2"; el("category").value="Ação"; el("status").value="Backlog"; el("media").value="Física";
+}
+function fillForm(game){
+  state.editingId = game.id; el("formTitle").textContent = "Editar jogo"; el("saveBtn").textContent = "Atualizar jogo"; el("cancelEdit").classList.remove("hidden");
+  el("title").value=game.title||""; el("platform").value=game.platform||"PS2"; el("category").value=game.category||"Ação"; el("status").value=game.status||"Backlog";
+  el("media").value=game.media||"Física"; el("year").value=game.year||""; el("notes").value=game.notes||""; el("synopsis").value=game.synopsis||"";
+  el("formCard").scrollIntoView({behavior:"smooth", block:"start"});
+}
+function saveGame(){
+  const data = getFormData();
+  if(!data.title) return alert("Digite o nome do jogo.");
+  const duplicate = state.games.find(g => normalize(g.title)===normalize(data.title) && g.platform===data.platform && g.id!==data.id);
+  if(duplicate) return alert("Esse jogo já está cadastrado nessa plataforma.");
+  const idx = state.games.findIndex(g => g.id===data.id);
+  if(idx>=0) state.games[idx]=data; else state.games.unshift(data);
+  persist(); clearForm(); render();
+}
+function removeGame(id){
+  const game = state.games.find(g => g.id===id); if(!game) return;
+  if(!confirm(`Excluir "${game.title}"?`)) return;
+  state.games = state.games.filter(g => g.id!==id); persist(); render();
+}
+function toggleFavorite(id){ const game = state.games.find(g => g.id===id); if(!game) return; game.favorite=!game.favorite; game.updatedAt=Date.now(); persist(); render(); }
+function exportBackup(){
+  const blob = new Blob([JSON.stringify(state.games,null,2)], {type:"application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download="alcantara-games-backup.json"; a.click(); URL.revokeObjectURL(a.href);
+}
+function importBackup(file){
+  const reader = new FileReader();
+  reader.onload = e => { try{ const data = JSON.parse(e.target.result); if(!Array.isArray(data)) throw new Error(); state.games=data; persist(); render(); alert("Backup restaurado com sucesso."); }catch{ alert("Arquivo inválido."); } };
+  reader.readAsText(file);
+}
+function getFilteredGames(){
+  let list=[...state.games];
+  const term=normalize(el("search").value), fp=el("filterPlatform").value, fs=el("filterStatus").value, fm=el("filterMedia").value, sortBy=el("sortBy").value, q=state.quickFilter;
+  if(term) list=list.filter(g => [g.title,g.platform,g.category,g.synopsis,g.notes].some(v => normalize(v).includes(term)));
+  if(fp!=="Todos") list=list.filter(g => g.platform===fp);
+  if(fs!=="Todos") list=list.filter(g => g.status===fs);
+  if(fm!=="Todos") list=list.filter(g => g.media===fm);
+  if(q==="Favoritos") list=list.filter(g => g.favorite); else if(["Jogando","Zerado","Backlog"].includes(q)) list=list.filter(g => g.status===q);
+  if(sortBy==="az") list.sort((a,b) => a.title.localeCompare(b.title,"pt-BR"));
+  else if(sortBy==="platform") list.sort((a,b) => a.platform.localeCompare(b.platform,"pt-BR") || a.title.localeCompare(b.title,"pt-BR"));
+  else if(sortBy==="favorites") list.sort((a,b) => Number(b.favorite)-Number(a.favorite) || b.updatedAt-a.updatedAt);
+  else list.sort((a,b) => b.updatedAt-a.updatedAt);
+  return list;
+}
+function chunkByPlatform(list){
+  const order=["PS2","Xbox 360","PS3","PC","Outros"], map={}; order.forEach(p => map[p]=[]);
+  list.forEach(g => { if(!map[g.platform]) map[g.platform]=[]; map[g.platform].push(g); });
+  return order.map(platform => ({platform, items: map[platform]||[]})).filter(group => group.items.length);
+}
+function initials(title){ return title.split(" ").slice(0,3).map(w => w[0]).join("").toUpperCase(); }
+function gameCard(game){
+  return `<article class="game">
+    <div class="cover">
+      <div class="platform-badge">${game.platform}</div><div class="status-badge">${game.status}</div><div class="media-badge">${game.media}</div><div class="fav-badge">${game.favorite ? "★ Favorito" : "☆ Comum"}</div>
+      <div class="cover-title">${game.title}</div>
+    </div>
+    <div class="game-body">
+      <div class="meta"><span>${game.year || "Ano n/d"}</span><span>${game.category}</span></div>
+      <span class="category">${game.category}</span>
+      <div class="synopsis">${game.synopsis || "Sem sinopse cadastrada."}</div>
+      <div class="actions">
+        <button class="mini" onclick="openDetails('${game.id}')">Detalhes</button>
+        <button class="mini" onclick="editGame('${game.id}')">Editar</button>
+        <button class="mini" onclick="toggleFavorite('${game.id}')">${game.favorite ? "Desfavoritar" : "Favoritar"}</button>
+        <button class="mini danger" onclick="removeGame('${game.id}')">Excluir</button>
+      </div>
+    </div>
+  </article>`;
+}
+function renderStats(){
+  el("statTotal").textContent=state.games.length;
+  el("statJogando").textContent=state.games.filter(g => g.status==="Jogando").length;
+  el("statZerado").textContent=state.games.filter(g => g.status==="Zerado").length;
+  el("statFav").textContent=state.games.filter(g => g.favorite).length;
+}
+function renderLibrary(){
+  const list=getFilteredGames(), library=el("library");
+  if(!list.length){ library.innerHTML='<div class="empty">Nenhum jogo encontrado com os filtros atuais.</div>'; return; }
+  const groups=chunkByPlatform(list);
+  library.innerHTML = groups.map(group => `<section><div class="shelf-title"><h3>${group.platform}</h3><span>${group.items.length} jogo(s)</span></div><div class="row">${group.items.map(gameCard).join("")}</div></section>`).join("");
+}
+function render(){ renderStats(); renderLibrary(); }
+function openDetails(id){
+  const game = state.games.find(g => g.id===id); if(!game) return;
+  el("modalTitle").textContent=game.title; el("modalCover").textContent=initials(game.title); el("mPlatform").textContent=game.platform; el("mCategory").textContent=game.category;
+  el("mStatus").textContent=game.status; el("mMedia").textContent=game.media; el("mYear").textContent=game.year||"Não informado"; el("mFav").textContent=game.favorite ? "Sim" : "Não";
+  el("mSynopsis").textContent=game.synopsis || "Sem sinopse cadastrada."; el("mNotes").textContent=game.notes || "Sem observações."; el("detailsModal").showModal();
+}
+function editGame(id){ const game = state.games.find(g => g.id===id); if(game) fillForm(game); }
+window.openDetails=openDetails; window.editGame=editGame; window.removeGame=removeGame; window.toggleFavorite=toggleFavorite;
+function bind(){
+  el("saveBtn").addEventListener("click", saveGame); el("cancelEdit").addEventListener("click", clearForm); el("btnExport").addEventListener("click", exportBackup); el("footerBackup").addEventListener("click", exportBackup);
+  el("btnImport").addEventListener("click", () => el("importFile").click()); el("footerRestore").addEventListener("click", () => el("importFile").click());
+  el("importFile").addEventListener("change", e => { const file=e.target.files[0]; if(file) importBackup(file); e.target.value=""; });
+  el("btnScrollForm").addEventListener("click", () => el("formCard").scrollIntoView({behavior:"smooth"})); el("footerAdd").addEventListener("click", () => el("formCard").scrollIntoView({behavior:"smooth"}));
+  ["search","filterPlatform","filterStatus","filterMedia","sortBy"].forEach(id => el(id).addEventListener(id==="search" ? "input" : "change", render));
+  el("closeModal").addEventListener("click", () => el("detailsModal").close());
+  qsa(".chip").forEach(chip => chip.addEventListener("click", () => { qsa(".chip").forEach(c => c.classList.remove("active")); chip.classList.add("active"); state.quickFilter=chip.dataset.quick; render(); }));
+  el("title").addEventListener("blur", () => { if(!el("synopsis").value.trim()){ const guess=autoSynopsis(el("title").value.trim()); if(guess) el("synopsis").value=guess; } });
+  window.addEventListener("load", () => setTimeout(() => el("splash").classList.add("hide"), 1200));
+}
+loadGames(); bind(); render();
+if("serviceWorker" in navigator){ window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js")); }
 </script>
 </body>
 </html>
